@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="image_button">32dp</dimen>
+    <dimen name="image_store">56dp</dimen>
+</resources>
