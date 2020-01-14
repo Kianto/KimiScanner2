@@ -1,9 +1,12 @@
 package com.app.kimiscanner.folder;
 
+import android.util.Log;
+
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.util.FileHelper;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.app.kimiscanner.LocalPath.ROOT_PATH;
 
@@ -65,12 +68,11 @@ public class FolderStore {
     }
 
     public boolean deleteFolder() {
-        for (String file : folder.filePaths) {
-            new File(file).delete();
+        File folderRoot = new File(folder.folderPath);
+        for (String file : Objects.requireNonNull(folderRoot.list())) {
+            new File(folderRoot.getPath(), file).delete();
         }
-
-        File file = new File(folder.folderPath);
-        return file.delete();
+        return folderRoot.delete();
     }
 
 }

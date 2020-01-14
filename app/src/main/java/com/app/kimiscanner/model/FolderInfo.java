@@ -68,7 +68,7 @@ public class FolderInfo {
             }
         }
 
-        return paths;
+        return sortByName(paths);
     }
 
     public ImageInfo getCoverImage() {
@@ -95,7 +95,6 @@ public class FolderInfo {
     }
 
     private long getSumSize() {
-        List<ImageInfo> images = getImageCollection();
         long res = 0;
 
         for (String path : filePaths) {
@@ -113,7 +112,6 @@ public class FolderInfo {
         for (String path : filePaths) {
             fileList.add(new File(path));
         }
-        fileList = sortByDate(fileList);
 
         for (File file : fileList) {
             collection.add(getImage(file));
@@ -144,6 +142,20 @@ public class FolderInfo {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date lastModDate = new Date(time);
         return simpleDateFormat.format(lastModDate);
+    }
+
+    private List<String> sortByName(List<String> list) {
+        Collections.sort(list, (s1, s2) -> {
+            try {
+                return Integer.parseInt(s1.substring(s1.lastIndexOf("_") + 1, s1.indexOf(".")))
+                        -
+                        Integer.parseInt(s2.substring(s2.lastIndexOf("_") + 1, s2.indexOf(".")));
+            } catch (Exception e) {
+                return s1.compareTo(s2);
+            }
+        });
+
+        return list;
     }
 
     private List<File> sortByDate(List<File> list) {

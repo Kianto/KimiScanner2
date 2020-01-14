@@ -11,6 +11,10 @@ import com.app.kimiscanner.folder.FolderActivity;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.setting.SettingActivity;
+import com.app.widget.Dialog.DeleteDialog;
+import com.app.widget.Dialog.Dialog;
+import com.app.widget.Dialog.FolderNameDialog;
+import com.app.widget.Dialog.FolderOptionDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,6 +27,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.opencv.android.OpenCVLoader;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements ItemFragment.OnListFragmentInteractionListener {
@@ -87,6 +93,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onLongListFragmentInteraction(FolderInfo item) {
+        FolderOptionDialog optionDialog = new FolderOptionDialog(this, new Dialog.Callback() {
+            @Override
+            public void onSucceed(String message) {
+                FolderStore.setInstance(item);
+                switch (message) {
+                    case FolderOptionDialog.DIALOG_FOLDER_SHARE:
+                        sharePDFMethod();
+                        break;
+                    case FolderOptionDialog.DIALOG_FOLDER_RENAME:
+                        renameMethod();
+                        break;
+                    case FolderOptionDialog.DIALOG_FOLDER_DELETE:
+                        deleteMethod();
+                        break;
+                    default:
+                        FolderStore.clear();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // do nothing
+            }
+        });
+
+        optionDialog.setFolderName(item.folderName);
+        optionDialog.show();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == Activity.RESULT_OK) {
             if (null != resultData) {
@@ -121,13 +158,71 @@ public class MainActivity extends AppCompatActivity
             }
             return;
         }
+        this.updateListItemsView();
 
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    private void updateListItemsView() {
         Fragment itemFragment = getSupportFragmentManager().getFragments().get(0);
         if (itemFragment instanceof ItemFragment) {
             ((ItemFragment) itemFragment).changedNotify();
         }
+    }
 
-        super.onActivityResult(requestCode, resultCode, resultData);
+    // === FOLDER PROCESS HANDLER ===
+    private void sharePDFMethod() {
+        String destPdfPath = FolderStore.getInstance().convertPDF();
+
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("application/pdf");
+
+        File imageFileToShare = new File(destPdfPath);
+
+        Uri uri = Uri.fromFile(imageFileToShare);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+
+        startActivity(Intent.createChooser(share, "Share via"));
+    }
+
+    private void renameMethod() {
+        FolderNameDialog renameDialog = new FolderNameDialog(this, new FolderNameDialog.Callback() {
+            @Override
+            public void onSucceed(String newName) {
+                if (FolderStore.getInstance().renameFolder(newName)) {
+                    FolderStore.clear();
+                    updateListItemsView();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        renameDialog.setDefaultName(FolderStore.getInstance().folder.folderName);
+        renameDialog.show();
+    }
+
+    private void deleteMethod() {
+        DeleteDialog deleteDialog = new DeleteDialog(this, new FolderNameDialog.Callback() {
+            @Override
+            public void onSucceed(String unused) {
+                if (FolderStore.getInstance().deleteFolder()) {
+                    FolderStore.clear();
+                    updateListItemsView();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        deleteDialog.setWarningId(R.string.dialog_delete_folder);
+        deleteDialog.show();
     }
 
 }

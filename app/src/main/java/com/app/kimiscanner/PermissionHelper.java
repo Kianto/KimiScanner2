@@ -25,7 +25,7 @@ public class PermissionHelper {
         String[] PERMISSION = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
+                Manifest.permission.CAMERA,
         };
         ActivityCompat.requestPermissions(activity, PERMISSION, REQUEST_CODE_PERMISSION);
     }

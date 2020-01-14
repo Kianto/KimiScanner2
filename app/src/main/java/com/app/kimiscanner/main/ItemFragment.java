@@ -95,7 +95,7 @@ public class ItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(FolderInfo item);
-
+        void onLongListFragmentInteraction(FolderInfo item);
     }
 
     public void changedNotify() {

@@ -30,8 +30,8 @@ public class FileHelper {
         try {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
                     new FileOutputStream(
-                            new File(parentFolder + "/" + id + "_"
-                                    + getNewRandomFileName() + ".jpeg")
+                            new File(parentFolder + "/"
+                                    + getNewRandomFileName() + "_" + id + ".jpeg")
                     )
             );
             file.compress(Bitmap.CompressFormat.JPEG, 85, bufferedOutputStream);

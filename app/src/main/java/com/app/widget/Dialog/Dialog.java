@@ -4,9 +4,9 @@ import android.content.Context;
 
 public abstract class Dialog {
     protected Context context;
-    protected FolderNameDialog.Callback callback;
+    protected Callback callback;
 
-    public Dialog(Context context, FolderNameDialog.Callback callback) {
+    public Dialog(Context context, Callback callback) {
         this.context = context;
         this.callback = callback;
     }

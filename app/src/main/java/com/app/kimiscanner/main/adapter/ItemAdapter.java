@@ -35,6 +35,14 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewH
                 mListener.onListFragmentInteraction(holder.folderInfo);
             }
         });
+
+        holder.mView.setOnLongClickListener(view -> {
+            if (null != mListener) {
+                mListener.onLongListFragmentInteraction(holder.folderInfo);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
