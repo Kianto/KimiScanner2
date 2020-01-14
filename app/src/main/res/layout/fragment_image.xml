@@ -24,7 +24,7 @@
             android:text="1000"
             android:gravity="center"
             android:textSize="24sp"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimaryLight"
             android:textColor="@color/colorStoreNumber"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />

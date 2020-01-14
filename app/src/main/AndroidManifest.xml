@@ -13,7 +13,9 @@
 
     <application
         android:allowBackup="true"
+        android:backupAgent="com.app.util.BackupAgent"
         android:fullBackupContent="@xml/my_backup_rules"
+
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,18 +24,22 @@
         <activity
             android:name=".folder.FolderActivity"
             android:label="@string/title_activity_folder"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" ></activity>
         <activity
             android:name=".camera.CameraActivity"
             android:label="@string/title_activity_camera"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".setting.SettingActivity"
-            android:label="@string/title_activity_setting" />
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,6 +56,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIrF2XsCzmlIyG5ot-ER6C7MjdE5JovQsqW2T5-g" />
 
     </application>
 

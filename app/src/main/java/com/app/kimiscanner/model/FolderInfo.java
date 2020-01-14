@@ -109,9 +109,13 @@ public class FolderInfo {
     public List<ImageInfo> getImageCollection() {
         List<ImageInfo> collection = new ArrayList<>();
 
+        List<File> fileList = new ArrayList<>();
         for (String path : filePaths) {
-            File file = new File(path);
+            fileList.add(new File(path));
+        }
+        fileList = sortByDate(fileList);
 
+        for (File file : fileList) {
             collection.add(getImage(file));
         }
 
@@ -141,4 +145,12 @@ public class FolderInfo {
         Date lastModDate = new Date(time);
         return simpleDateFormat.format(lastModDate);
     }
+
+    private List<File> sortByDate(List<File> list) {
+        Collections.sort(list, (f1, f2) -> (int) (f2.lastModified() - f1.lastModified()));
+
+        return list;
+    }
+
+
 }
