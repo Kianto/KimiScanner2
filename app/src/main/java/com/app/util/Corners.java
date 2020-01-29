@@ -18,6 +18,13 @@ public class Corners {
     }
 
     public int[] cornersToArray() {
+        if (null == cornerPoints)
+            return new int[]{
+                    0, 0,
+                    (int) layoutWidth, 0,
+                    (int) layoutWidth, (int) layoutHeight,
+                    0, (int) layoutHeight,
+            };
         return new int[]{
                 (int) cornerPoints.get(0).x, (int) cornerPoints.get(0).y,
                 (int) cornerPoints.get(1).x, (int) cornerPoints.get(1).y,

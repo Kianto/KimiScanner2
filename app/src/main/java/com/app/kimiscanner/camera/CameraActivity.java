@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.MainActivity;
+import com.app.widget.Dialog.DeleteDialog;
+import com.app.widget.Dialog.Dialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class CameraActivity extends AppCompatActivity
         implements ScanFragment.IFragmentInteractionListener {
@@ -49,7 +52,33 @@ public class CameraActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case android.R.id.home:
-                finish();
+
+                if (getSupportFragmentManager().getFragments().size() > 1) {
+                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
+                    if (fragment instanceof ProcessFragment) {
+                        PhotoStore.getInstance().deleteNewest();
+                        Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
+                    }
+                    this.onCloseFragmentInteraction(fragment);
+                    break;
+                }
+
+                DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
+                    @Override
+                    public void onSucceed(String message) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        // do nothing
+                    }
+                });
+                if (PhotoStore.getInstance().hasPhoto())
+                    closingDialog.setWarningId(R.string.action_close_captured_camera);
+                else
+                    closingDialog.setWarningId(R.string.action_close_camera);
+                closingDialog.show();
                 break;
         }
         return true;

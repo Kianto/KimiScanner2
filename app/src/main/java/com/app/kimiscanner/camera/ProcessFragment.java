@@ -16,6 +16,7 @@ import com.app.kimiscanner.R;
 import com.app.util.Corners;
 import com.app.util.FileHelper;
 import com.app.util.PhotoProcessor;
+import com.app.widget.LoadingRunner;
 
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class ProcessFragment extends ScanFragment {
     private PhotoProcessor photoProcessor;
     private ViewHolder viewHolder;
 
-    boolean isRunning = true;
+    boolean isRunning = false;
+    private LoadingRunner saveRunner;
 
     public ProcessFragment() {
     }
@@ -37,6 +39,11 @@ public class ProcessFragment extends ScanFragment {
 
         viewHolder = new ViewHolder();
         viewHolder.load(view);
+
+        saveRunner = new SaveLoadingTask(view.findViewById(R.id.process_loading), object -> {
+            isRunning = false;
+            activityListener.onDoneAllWorkInteraction();
+        });
 
         viewHolder.showImage(photoProcessor.getOriginal());
 
@@ -109,6 +116,8 @@ public class ProcessFragment extends ScanFragment {
     }
 
     private void onClick(View view) {
+        if (isRunning) return;
+
         switch (view.getId()) {
             case R.id.process_add:
                 PhotoStore.getInstance().saveNewest(viewHolder.getShowBitmap());
@@ -117,8 +126,9 @@ public class ProcessFragment extends ScanFragment {
 
             case R.id.process_done:
                 PhotoStore.getInstance().saveNewest(viewHolder.getShowBitmap());
-                saveAllPhotos();
-                activityListener.onDoneAllWorkInteraction();
+                isRunning = true;
+                saveRunner.execute();
+//                activityListener.onDoneAllWorkInteraction();
                 break;
 
             case R.id.process_rotate:
@@ -156,5 +166,23 @@ public class ProcessFragment extends ScanFragment {
         // Close store and clean work
         PhotoStore.getInstance().clear();
     }
+
+    // === Thread Loading ===
+    private class SaveLoadingTask extends LoadingRunner {
+        SaveLoadingTask(ProgressBar progressBar, LoadingRunner.LoadingCallback callback) {
+            super(progressBar, callback);
+        }
+
+        @Override
+        protected void doInBackground() {
+            saveAllPhotos();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    } // end class ListLoadingTask
 
 }

@@ -30,7 +30,7 @@ public class DeleteDialog extends Dialog {
 
         new AlertDialog
                 .Builder(context)
-                .setTitle(context.getString(R.string.action_rename))
+                .setTitle(context.getString(R.string.action_remove))
                 .setView(inflate)
                 .setPositiveButton(context.getString(R.string.action_ok), new DialogInterface.OnClickListener() {
                     @Override

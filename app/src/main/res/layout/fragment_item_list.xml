@@ -37,4 +37,13 @@
         app:layoutManager="LinearLayoutManager"
         tools:context=".main.ItemFragment"
         tools:listitem="@layout/fragment_linear_item" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

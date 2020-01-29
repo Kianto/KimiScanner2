@@ -39,7 +39,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.app.kimiscanner.camera.ImageProcessor.*;
+import static com.app.kimiscanner.camera.ScanProcessor.*;
 
 public class CameraView extends SurfaceView implements Callback {
 

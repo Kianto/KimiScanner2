@@ -20,6 +20,9 @@ import android.widget.TextView;
 import com.app.kimiscanner.R;
 import com.app.util.Corners;
 
+import org.opencv.core.Point;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -332,6 +335,9 @@ public class CameraFragment extends ScanFragment {
 
             // Put extras
             Corners corners = mPreview.getDetectedCorners();
+            if (null == corners) {
+                corners = new Corners(null, null);
+            }
             corners.layoutHeight = viewHolder.previewHolder.getHeight();
             corners.layoutWidth = viewHolder.previewHolder.getWidth();
 

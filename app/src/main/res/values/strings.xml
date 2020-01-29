@@ -33,10 +33,14 @@
     <string name="action_rename">Rename</string>
     <string name="action_delete">Delete</string>
 
-    <!-- Rename Dialog -->
+    <!-- Dialog -->
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="dialog_delete_folder">Are you sure delete this folder?</string>
+    <string name="action_close_camera">Do you want to close camera?</string>
+    <string name="action_close_captured_camera">Are you sure delete all captured pictures and close camera?</string>
+    <string name="action_cancel_process">Process is canceled</string>
+    <string name="action_remove">Remove</string>
 
 
 </resources>

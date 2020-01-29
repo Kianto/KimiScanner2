@@ -1,6 +1,7 @@
 package com.app.kimiscanner.main;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,15 +10,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.adapter.GridItemAdapter;
 import com.app.kimiscanner.main.adapter.LinearItemAdapter;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.widget.LoadingRunner;
+
+import java.util.List;
 
 public class ItemFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -29,6 +33,9 @@ public class ItemFragment extends Fragment {
     private RecyclerView listLayout;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
+    private ProgressBar progressBar;
+
+    private LoadingRunner runner;
 
     public ItemFragment() {
     }
@@ -64,8 +71,10 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        progressBar = view.findViewById(R.id.progressBar);
         setListManager(view);
         setShowOptionListener(view);
+        setLoadingThread(progressBar);
 
         return view;
     }
@@ -95,6 +104,7 @@ public class ItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(FolderInfo item);
+
         void onLongListFragmentInteraction(FolderInfo item);
     }
 
@@ -105,14 +115,7 @@ public class ItemFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        if (mColumnCount <= 1) {
-            listLayout.setLayoutManager(linearLayoutManager);
-            listLayout.setAdapter(new LinearItemAdapter(FolderCollector.getLocalFolders(), mListener));
-        } else {
-            listLayout.setLayoutManager(gridLayoutManager);
-            listLayout.setAdapter(new GridItemAdapter(FolderCollector.getLocalFolders(), mListener));
-        }
+        runner.execute();
     }
 
     private void setListManager(View view) {
@@ -145,24 +148,47 @@ public class ItemFragment extends Fragment {
                 case R.id.list_linear:
                     if (isList) return;
                     mColumnCount = 1;
-                    listLayout.setLayoutManager(linearLayoutManager);
-                    listLayout.setAdapter(new LinearItemAdapter(FolderCollector.getLocalFolders(), mListener));
                     isList = true;
                     break;
 
                 case R.id.list_grid:
                     if (!isList) return;
                     mColumnCount = ItemFragment.GRID_COLUMN;
-                    listLayout.setLayoutManager(gridLayoutManager);
-                    listLayout.setAdapter(new GridItemAdapter(FolderCollector.getLocalFolders(), mListener));
                     isList = false;
                     break;
             }
+            runner.execute();
 
             Bundle args = new Bundle();
             args.putInt(ARG_COLUMN_COUNT, mColumnCount);
             fragment.setArguments(args);
         }
     }
+
+    // === Thread Loading ===
+    private void setLoadingThread(ProgressBar progressBar) {
+        runner = new ListLoadingTask(progressBar, list -> {
+            List<FolderInfo> fileList = (List<FolderInfo>) list;
+            if (mColumnCount <= 1) {
+                listLayout.setLayoutManager(linearLayoutManager);
+                listLayout.setAdapter(new LinearItemAdapter(fileList, mListener));
+            } else {
+                listLayout.setLayoutManager(gridLayoutManager);
+                listLayout.setAdapter(new GridItemAdapter(fileList, mListener));
+            }
+        });
+    }
+
+    private class ListLoadingTask extends LoadingRunner {
+        ListLoadingTask(ProgressBar progressBar, LoadingRunner.LoadingCallback callback) {
+            super(progressBar, callback);
+        }
+
+        @Override
+        protected void doInBackground() {
+            returnValue = FolderCollector.getLocalFolders();
+        }
+
+    } // end class ListLoadingTask
 
 }

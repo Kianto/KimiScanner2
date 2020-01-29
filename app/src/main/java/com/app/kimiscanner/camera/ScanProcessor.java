@@ -31,13 +31,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ImageProcessor {
+public class ScanProcessor {
     private static final int SCALE_HEIGHT = 100;
     private static final long MEGABYTE = 1000000;
 
     Context context;
 
-    public ImageProcessor(Context context) {
+    public ScanProcessor(Context context) {
         this.context = context;
 
         if (!OpenCVLoader.initDebug()) {
@@ -90,7 +90,7 @@ public class ImageProcessor {
     public static Corners getCorners(ArrayList<MatOfPoint> contours, Size size) {
         int indexTo;
 
-        if (contours.size() >= 0 && contours.size() <= 5) {
+        if (contours.size() > 0 && contours.size() <= 5) {
             indexTo = contours.size() - 1;
         } else {
             indexTo = 4;
