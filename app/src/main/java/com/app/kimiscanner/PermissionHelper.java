@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -22,15 +23,15 @@ public class PermissionHelper {
     }
 
     public void requestPermission() {
-        String[] PERMISSION = {
+        String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
         };
-        ActivityCompat.requestPermissions(activity, PERMISSION, REQUEST_CODE_PERMISSION);
+        ActivityCompat.requestPermissions(activity, PERMISSIONS, REQUEST_CODE_PERMISSION);
     }
 
-    public void showCancelPermissionDialog() {
+    private void showCancelPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_are_you_sure);
 
@@ -52,7 +53,7 @@ public class PermissionHelper {
         }
     }
 
-    public void showMissingPermissionDialog() {
+    private void showMissingPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.dialog_help_text);
 
@@ -78,9 +79,25 @@ public class PermissionHelper {
         }
     }
 
-    public boolean hasAllPermissionGranted(int[] grantResults) {
+    public boolean hasAllPermissionGranted() {
+        String[] PERMISSIONS = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for (String per : PERMISSIONS) {
+                if (PackageManager.PERMISSION_DENIED == activity.checkSelfPermission(per)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean hasAllPermissionGranted(int[] grantResults) {
         for (int res : grantResults) {
-            if (res == -1) {
+            if (res == PackageManager.PERMISSION_DENIED) {
                 return false;
             }
         }

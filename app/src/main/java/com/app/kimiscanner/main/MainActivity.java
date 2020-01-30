@@ -5,16 +5,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.camera.CameraActivity;
 import com.app.kimiscanner.folder.FolderActivity;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.setting.SettingActivity;
-import com.app.widget.Dialog.DeleteDialog;
-import com.app.widget.Dialog.Dialog;
-import com.app.widget.Dialog.FolderNameDialog;
-import com.app.widget.Dialog.FolderOptionDialog;
+import com.app.widget.dialog.DeleteDialog;
+import com.app.widget.dialog.Dialog;
+import com.app.widget.dialog.FolderNameDialog;
+import com.app.widget.dialog.FolderOptionDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(new Intent(view.getContext(), CameraActivity.class), REQUEST_CODE_CAMERA);
             }
         });
+
+        new PermissionHelper(this).requestPermission();
     }
 
     @Override

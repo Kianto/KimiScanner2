@@ -7,8 +7,8 @@ import android.os.Bundle;
 import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.MainActivity;
-import com.app.widget.Dialog.DeleteDialog;
-import com.app.widget.Dialog.Dialog;
+import com.app.widget.dialog.DeleteDialog;
+import com.app.widget.dialog.Dialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -39,13 +38,15 @@ public class CameraActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        if (!permissionHelper.hasAllPermissionGranted()) {
+            permissionHelper.requestPermission();
+            finish();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        permissionHelper.requestPermission();
     }
 
     @Override

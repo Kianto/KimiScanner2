@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.app.kimiscanner.R;
-import com.app.widget.Dialog.DeleteDialog;
-import com.app.widget.Dialog.FolderNameDialog;
+import com.app.widget.dialog.DeleteDialog;
+import com.app.widget.dialog.FolderNameDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
