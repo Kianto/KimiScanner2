@@ -19,6 +19,7 @@ import com.app.widget.dialog.FolderOptionDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -176,14 +177,12 @@ public class MainActivity extends AppCompatActivity
     // === FOLDER PROCESS HANDLER ===
     private void sharePDFMethod() {
         String destPdfPath = FolderStore.getInstance().convertPDF();
+        File imageFileToShare = new File(destPdfPath);
+        Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", imageFileToShare);
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("application/pdf");
-
-        File imageFileToShare = new File(destPdfPath);
-
-        Uri uri = Uri.fromFile(imageFileToShare);
-        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
         startActivity(Intent.createChooser(share, "Share via"));
     }

@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.view.Menu;
@@ -21,6 +22,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+
+import static androidx.core.content.FileProvider.getUriForFile;
 
 public class FolderActivity extends AppCompatActivity {
 
@@ -95,25 +98,25 @@ public class FolderActivity extends AppCompatActivity {
 
     private void sharePDFMethod() {
         String destPdfPath = FolderStore.getInstance().convertPDF();
+        File imageFileToShare = new File(destPdfPath);
+        Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", imageFileToShare);
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("application/pdf");
-
-        File imageFileToShare = new File(destPdfPath);
-
-        Uri uri = Uri.fromFile(imageFileToShare);
-        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
         startActivity(Intent.createChooser(share, "Share via"));
     }
 
     private void openPDFMethod() {
         String destPdfPath = FolderStore.getInstance().convertPDF();
-
         File file = new File(destPdfPath);
         Intent target = new Intent(Intent.ACTION_VIEW);
-        target.setDataAndType(Uri.fromFile(file),"application/pdf");
-        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", file);
+
+        target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        target.setDataAndType(contentUri,"application/pdf");
+        target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         Intent intent = Intent.createChooser(target, "Open file");
         try {
