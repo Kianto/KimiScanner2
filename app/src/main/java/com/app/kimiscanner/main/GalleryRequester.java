@@ -53,7 +53,11 @@ public abstract class GalleryRequester {
 
             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-//            image = rotate90(image);
+
+            if (image.getWidth() > image.getHeight()) {
+                image = rotate90(image);
+            }
+
             parcelFileDescriptor.close();
 
             PhotoStore.getInstance().addBitmap(image);
