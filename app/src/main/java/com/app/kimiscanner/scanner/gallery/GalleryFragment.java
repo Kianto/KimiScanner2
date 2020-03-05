@@ -131,9 +131,11 @@ public class GalleryFragment extends ScanFragment {
             if (scale * mRecyclerView.getHeight() <= mRecyclerView.getWidth()) {
                 corners.layoutWidth = (float) (scale * mRecyclerView.getHeight());
                 corners.layoutHeight = mRecyclerView.getHeight();
+                corners.scalePoints(1.0 * mRecyclerView.getHeight() / bitmap.getHeight());
             } else {
                 corners.layoutWidth = mRecyclerView.getWidth();
                 corners.layoutHeight = (float) (mRecyclerView.getWidth() / scale);
+                corners.scalePoints(1.0 * mRecyclerView.getWidth() / bitmap.getWidth());
             }
         }
         mListener.onListFragmentInteraction(index);

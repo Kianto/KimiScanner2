@@ -41,4 +41,12 @@ public class Corners {
         cornerPoints.add(new Point(arr[6], arr[7]));
     }
 
+    public void scalePoints(double scale) {
+        if (null == cornerPoints) return;
+        for (Point point : cornerPoints) {
+            point.x = point.x * scale;
+            point.y = point.y * scale;
+        }
+    }
+
 }

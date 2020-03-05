@@ -72,6 +72,7 @@ public class PhotoStore {
     public void deleteProcessing() {
         capturedPhotos.remove(processingIndex);
         cornersList.remove(cornersList.size() - 1);
+        processingIndex--;
     }
 
     public void updateProcessing(Bitmap newBitmap, int[] points) {
