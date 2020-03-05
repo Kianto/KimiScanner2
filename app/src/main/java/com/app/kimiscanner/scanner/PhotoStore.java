@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner;
 
 import android.graphics.Bitmap;
 
@@ -12,6 +12,8 @@ public class PhotoStore {
 
     private List<Bitmap> capturedPhotos;
     private List<Corners> cornersList;
+
+    private int processingIndex = 0;
 
     private PhotoStore() {
         processedPhotos = new ArrayList<>();
@@ -29,6 +31,7 @@ public class PhotoStore {
 
     public void addBitmap(Bitmap newPhoto) {
         capturedPhotos.add(newPhoto);
+        processingIndex = capturedPhotos.size() - 1;
     }
 
     public List<Bitmap> getCapturedPhotos() {
@@ -43,36 +46,36 @@ public class PhotoStore {
         return capturedPhotos.size();
     }
 
-    public Bitmap getNewestBitmap() {
+    public Bitmap getProcessingBitmap() {
         if (capturedPhotos.isEmpty())
             return null;
-        return capturedPhotos.get(capturedPhotos.size() - 1);
+        return capturedPhotos.get(processingIndex);
     }
 
     public void addCorners(Corners corners) {
         cornersList.add(corners);
     }
 
-    public Corners getNewestCorners() {
+    public Corners getProcessingCorners() {
         if (cornersList.isEmpty())
             return null;
-        return cornersList.get(cornersList.size() - 1);
+        return cornersList.get(processingIndex);
     }
 
-    public void saveNewest(Bitmap newest) {
+    public void saveProcessing(Bitmap newest) {
         if (processedPhotos.size() < capturedPhotos.size())
             processedPhotos.add(newest);
         else // updating the old one:
-            processedPhotos.set(processedPhotos.size() - 1, newest);
+            processedPhotos.set(processingIndex, newest);
     }
 
-    public void deleteNewest() {
-        capturedPhotos.remove(capturedPhotos.size() - 1);
+    public void deleteProcessing() {
+        capturedPhotos.remove(processingIndex);
         cornersList.remove(cornersList.size() - 1);
     }
 
-    public void updateNewest(Bitmap newBitmap, int[] points) {
-        capturedPhotos.set(capturedPhotos.size() - 1, newBitmap);
+    public void updateProcessing(Bitmap newBitmap, int[] points) {
+        capturedPhotos.set(processingIndex, newBitmap);
         Corners corners = cornersList.get(cornersList.size() - 1);
         corners.setCornersByArray(points);
     }
@@ -87,5 +90,7 @@ public class PhotoStore {
         return processedPhotos;
     }
 
-
+    public void setProcessingIndex(int index) {
+        processingIndex = index;
+    }
 }

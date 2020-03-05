@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.app.kimiscanner.LocalPath.ROOT_PATH;
 
-public class BackupAgent extends BackupAgentHelper {
+public class FileBackupAgent extends BackupAgentHelper {
     // A key to uniquely identify the set of backup data
     static final String PREFS_BACKUP_KEY = "kimiscanner";
 
@@ -39,23 +39,10 @@ public class BackupAgent extends BackupAgentHelper {
         return new File(ROOT_PATH);
     }
 
-//    @Override
-//    public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data,
-//                         ParcelFileDescriptor newState) throws IOException {
-//        // Hold the lock while the FileBackupHelper performs backup
-//        synchronized (MyActivity.sDataLock) {
-//            super.onBackup(oldState, data, newState);
-//        }
-//    }
-
-//    @Override
-//    public void onRestore(BackupDataInput data, int appVersionCode,
-//                          ParcelFileDescriptor newState) throws IOException {
-//        // Hold the lock while the FileBackupHelper restores the file
-//        synchronized (MyActivity.sDataLock) {
-//            super.onRestore(data, appVersionCode, newState);
-//        }
-//    }
+    @Override
+    public File getExternalFilesDir(String type) {
+        return new File(ROOT_PATH);
+    }
 
     private ArrayList<String> getImageName(File[] files) {
         ArrayList<String> fileNameList = new ArrayList<>();

@@ -1,9 +1,8 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.app.kimiscanner.R;
 import com.app.util.Corners;
 import com.app.util.PhotoProcessor;
 import com.app.widget.CropImageView;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class CropFragment extends ScanFragment {
 
@@ -61,8 +57,8 @@ public class CropFragment extends ScanFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        newBitmap = PhotoStore.getInstance().getNewestBitmap();
-        cropPoints = PhotoStore.getInstance().getNewestCorners();
+        newBitmap = PhotoStore.getInstance().getProcessingBitmap();
+        cropPoints = PhotoStore.getInstance().getProcessingCorners();
         if (null == newBitmap) {
             activityListener.onCloseFragmentInteraction(CropFragment.this);
             return;
@@ -117,7 +113,7 @@ public class CropFragment extends ScanFragment {
 
             case R.id.crop_done:
                 // TODO: Update crop and degree in newest photo
-                PhotoStore.getInstance().updateNewest(newBitmap, cropImageView.getPoints());
+                PhotoStore.getInstance().updateProcessing(newBitmap, cropImageView.getPoints());
                 activityListener.onCloseFragmentInteraction(CropFragment.this);
                 break;
 

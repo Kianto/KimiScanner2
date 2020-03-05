@@ -1,11 +1,9 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner.camera;
 
 import android.content.Context;
 import android.graphics.Matrix;
-import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;

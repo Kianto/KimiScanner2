@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner;
 
 import android.content.Context;
 import android.view.View;
@@ -29,7 +29,7 @@ public abstract class ScanFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    interface IFragmentInteractionListener {
+    public interface IFragmentInteractionListener {
         void onCameraFragmentInteraction();
         void onProcessFragmentInteraction();
         void onCloseFragmentInteraction(ScanFragment fragment);

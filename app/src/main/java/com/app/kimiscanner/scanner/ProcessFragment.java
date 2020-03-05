@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -54,8 +54,8 @@ public class ProcessFragment extends ScanFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        Bitmap newBitmap = PhotoStore.getInstance().getNewestBitmap();
-        Corners cropPoints = PhotoStore.getInstance().getNewestCorners();
+        Bitmap newBitmap = PhotoStore.getInstance().getProcessingBitmap();
+        Corners cropPoints = PhotoStore.getInstance().getProcessingCorners();
         if (null == newBitmap) {
             activityListener.onCloseFragmentInteraction(ProcessFragment.this);
             return;
@@ -120,12 +120,12 @@ public class ProcessFragment extends ScanFragment {
 
         switch (view.getId()) {
             case R.id.process_add:
-                PhotoStore.getInstance().saveNewest(viewHolder.getShowBitmap());
+                PhotoStore.getInstance().saveProcessing(viewHolder.getShowBitmap());
                 activityListener.onCloseFragmentInteraction(ProcessFragment.this);
                 break;
 
             case R.id.process_done:
-                PhotoStore.getInstance().saveNewest(viewHolder.getShowBitmap());
+                PhotoStore.getInstance().saveProcessing(viewHolder.getShowBitmap());
                 isRunning = true;
                 saveRunner.execute();
 //                activityListener.onDoneAllWorkInteraction();
@@ -140,7 +140,7 @@ public class ProcessFragment extends ScanFragment {
                 break;
 
             case R.id.process_delete:
-                PhotoStore.getInstance().deleteNewest();
+                PhotoStore.getInstance().deleteProcessing();
                 activityListener.onCloseFragmentInteraction(ProcessFragment.this);
                 break;
 
@@ -176,13 +176,8 @@ public class ProcessFragment extends ScanFragment {
         @Override
         protected void doInBackground() {
             saveAllPhotos();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
-    } // end class ListLoadingTask
+    } // end class SaveLoadingTask
 
 }

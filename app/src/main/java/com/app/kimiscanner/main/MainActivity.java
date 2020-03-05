@@ -7,11 +7,11 @@ import android.os.Bundle;
 
 import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
-import com.app.kimiscanner.camera.CameraActivity;
+import com.app.kimiscanner.account.AccountActivity;
+import com.app.kimiscanner.scanner.camera.CameraActivity;
 import com.app.kimiscanner.folder.FolderActivity;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
-import com.app.kimiscanner.setting.SettingActivity;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
 import com.app.widget.dialog.FolderNameDialog;
@@ -31,6 +31,8 @@ import android.widget.Toast;
 import org.opencv.android.OpenCVLoader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements ItemFragment.OnListFragmentInteractionListener {
@@ -79,11 +81,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_gallery) {
-            // TODO:
+            // TODO: check case out of memory if select too many images
+            // allow select one image only
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+            this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
             return true;
         }
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingActivity.class));
+            startActivity(new Intent(this, AccountActivity.class));
             return true;
         }
 
@@ -133,31 +142,18 @@ public class MainActivity extends AppCompatActivity
             if (null != resultData) {
                 if (null != resultData.getClipData()) {
                     // Process multi selected photos
+                    List<Uri> uriList = new ArrayList<>();
                     for (int i = 0; i < resultData.getClipData().getItemCount(); i++) {
-                        Uri uri = resultData.getClipData().getItemAt(i).getUri();
+                        uriList.add(resultData.getClipData().getItemAt(i).getUri());
                     }
 
-                    // TODO: handle many images
+                    GalleryRequester.startGalleryActivity(this, uriList);
 
                 } else {
                     // Process a single selected photo
                     Uri uri = resultData.getData();
 
-//                    try {
-//                        ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
-//
-//                        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-//                        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-//                        parcelFileDescriptor.close();
-//
-//                        StoreHelper.saveBitmap = image;
-//                        Intent intent = new Intent(this, DetectActivity.class);
-//                        intent.putExtra("isFromCamera", false);
-//                        startActivityForResult(intent, 0);
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+                    GalleryRequester.startGalleryActivity(this, uri);
                 }
             }
             return;

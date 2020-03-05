@@ -1,16 +1,18 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner.gallery;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
-import com.app.kimiscanner.main.MainActivity;
+import com.app.kimiscanner.scanner.CropFragment;
+import com.app.kimiscanner.scanner.PhotoStore;
+import com.app.kimiscanner.scanner.ProcessFragment;
+import com.app.kimiscanner.scanner.ScanFragment;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,20 +21,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-public class CameraActivity extends AppCompatActivity
-        implements ScanFragment.IFragmentInteractionListener {
+public class GalleryActivity extends AppCompatActivity
+        implements GalleryFragment.OnListFragmentInteractionListener,
+        ScanFragment.IFragmentInteractionListener {
 
     private PermissionHelper permissionHelper = new PermissionHelper(this);
+    private Fragment mProcessFragment, mCropFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_gallery);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -45,22 +49,14 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case android.R.id.home:
-
-                if (getSupportFragmentManager().getFragments().size() > 1) {
-                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
-                    if (fragment instanceof ProcessFragment) {
-                        PhotoStore.getInstance().deleteNewest();
-                        Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
-                    }
-                    this.onCloseFragmentInteraction(fragment);
+                if (null != mCropFragment) {
+                    onCloseFragmentInteraction((ScanFragment) mCropFragment);
+                    break;
+                } else if (null != mProcessFragment) {
+                    onCloseFragmentInteraction((ScanFragment) mProcessFragment);
                     break;
                 }
 
@@ -86,31 +82,27 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        boolean res = permissionHelper.handleResult(requestCode, permissions, grantResults);
-        if (!res) {
-            finish();
-        }
+    public void onListFragmentInteraction(int index) {
+        PhotoStore.getInstance().setProcessingIndex(index);
+        onCameraFragmentInteraction();
     }
 
-    // <@== IFragmentInteractionListener ==@>
+    // <== IFragmentInteractionListener ==>
     @Override
     public void onCameraFragmentInteraction() {
-        Fragment fragment = new ProcessFragment();
+        mProcessFragment = new ProcessFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
-        transaction.replace(R.id.camera_fragment, fragment);
+        transaction.replace(R.id.gallery_fragment, mProcessFragment);
         transaction.commit();
     }
 
     @Override
     public void onProcessFragmentInteraction() {
-        Fragment fragment = new CropFragment();
+        mCropFragment = new CropFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
-        transaction.replace(R.id.camera_fragment, fragment);
+        transaction.replace(R.id.gallery_fragment, mCropFragment);
         transaction.commit();
     }
 
@@ -122,10 +114,12 @@ public class CameraActivity extends AppCompatActivity
         transaction.commit();
 
         if (fragment instanceof ProcessFragment) {
+            mProcessFragment = null;
             FragmentManager manager = getSupportFragmentManager();
-            ((CameraFragment)manager.getFragments().get(0)).reset();
+            ((GalleryFragment)manager.getFragments().get(0)).update();
         }
         if (fragment instanceof CropFragment) {
+            mCropFragment = null;
             this.onCameraFragmentInteraction();
         }
 
@@ -137,11 +131,5 @@ public class CameraActivity extends AppCompatActivity
     }
     // </== IFragmentInteractionListener ==/>
 
-    @Override
-    public void onDestroy() {
-        setResult(Activity.RESULT_OK, new Intent(this, MainActivity.class));
-        PhotoStore.getInstance().clear();
-        super.onDestroy();
-    }
 
 }

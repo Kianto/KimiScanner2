@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner.camera;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.app.kimiscanner.scanner.ScanProcessor;
 import com.app.util.Corners;
 
 import org.opencv.android.Utils;
@@ -39,7 +40,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.app.kimiscanner.camera.ScanProcessor.*;
+import static com.app.kimiscanner.scanner.ScanProcessor.*;
 
 public class CameraView extends SurfaceView implements Callback {
 
@@ -259,7 +260,7 @@ public class CameraView extends SurfaceView implements Callback {
                                         .create(new ObservableOnSubscribe<Corners>() {
                                             @Override
                                             public void subscribe(ObservableEmitter<Corners> emitter) {
-                                                Corners corner = processPicture(finalImg);
+                                                Corners corner = ScanProcessor.processPicture(finalImg);
                                                 busy = false;
                                                 if (null != corner) {
                                                     detectedCorners = corner;

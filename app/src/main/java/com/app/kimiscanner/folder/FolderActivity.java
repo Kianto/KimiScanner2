@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import static androidx.core.content.FileProvider.getUriForFile;
-
 public class FolderActivity extends AppCompatActivity {
 
     MenuItem linearOption, gridOption;
@@ -166,8 +164,8 @@ public class FolderActivity extends AppCompatActivity {
 
     private void changeViewMethod() {
         Fragment fragment = getSupportFragmentManager().getFragments().get(0);
-        if (fragment instanceof FolderActivityFragment) {
-            ((FolderActivityFragment) fragment).changeView();
+        if (fragment instanceof FolderFragment) {
+            ((FolderFragment) fragment).changeView();
         }
     }
 

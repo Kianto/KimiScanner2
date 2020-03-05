@@ -5,4 +5,5 @@
         domain="file"
         path="."
         requireFlags="clientSideEncryption" />
+<!--    external-->
 </full-backup-content>

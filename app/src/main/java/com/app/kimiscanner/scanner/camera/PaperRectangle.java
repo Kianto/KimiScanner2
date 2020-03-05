@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner.camera;
 
 import android.app.Activity;
 import android.content.Context;

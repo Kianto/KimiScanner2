@@ -1,9 +1,7 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner.camera;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -18,11 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.kimiscanner.R;
+import com.app.kimiscanner.scanner.PhotoStore;
+import com.app.kimiscanner.scanner.ScanFragment;
 import com.app.util.Corners;
 
-import org.opencv.core.Point;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,7 +68,7 @@ public class CameraFragment extends ScanFragment {
 
     private void loadImageStore() {
         if (PhotoStore.getInstance().hasPhoto()) {
-            viewHolder.showImageStore(PhotoStore.getInstance().getNewestBitmap(), PhotoStore.getInstance().size());
+            viewHolder.showImageStore(PhotoStore.getInstance().getProcessingBitmap(), PhotoStore.getInstance().size());
         } else {
             viewHolder.showImageStore(null, 0);
         }

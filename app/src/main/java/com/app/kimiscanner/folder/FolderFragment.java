@@ -17,7 +17,7 @@ import com.app.kimiscanner.model.FolderInfo;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FolderActivityFragment extends Fragment {
+public class FolderFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "folder-column-count";
     private static final int GRID_COLUMN = 2;
 
@@ -30,7 +30,7 @@ public class FolderActivityFragment extends Fragment {
 
     private FolderInfo folder;
 
-    public FolderActivityFragment() {
+    public FolderFragment() {
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, 1);
         this.setArguments(args);

@@ -3,4 +3,6 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="image_button">32dp</dimen>
     <dimen name="image_store">56dp</dimen>
+    <dimen name="cardview_radius">10dp</dimen>
+    <dimen name="inner_text_margin">4dp</dimen>
 </resources>

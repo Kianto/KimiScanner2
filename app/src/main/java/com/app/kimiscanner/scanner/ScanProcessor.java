@@ -1,4 +1,4 @@
-package com.app.kimiscanner.camera;
+package com.app.kimiscanner.scanner;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -11,6 +11,7 @@ import android.util.Log;
 import com.app.util.Corners;
 
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -85,6 +86,14 @@ public class ScanProcessor {
         dst_mat.release();
 
         return croppedPic;
+    }
+
+    public static Corners getCorners(Bitmap bitmap) {
+        Mat img = new Mat();
+        Utils.bitmapToMat(bitmap, img);
+
+        Corners corners = processPicture(img);
+        return (null != corners ? corners : new Corners(null, null));
     }
 
     public static Corners getCorners(ArrayList<MatOfPoint> contours, Size size) {
