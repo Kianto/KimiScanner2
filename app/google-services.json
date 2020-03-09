@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "343618653196",
+    "firebase_url": "https://kimiscanner-6b314.firebaseio.com",
+    "project_id": "kimiscanner-6b314",
+    "storage_bucket": "kimiscanner-6b314.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343618653196:android:05c95e79977a16fc89f229",
+        "android_client_info": {
+          "package_name": "com.app.kimiscanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343618653196-oif9elp165hgrrve9b41m4phjoqh5g1n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.kimiscanner",
+            "certificate_hash": "b9ce51108c976e45bcc3cd722454f10b921e087f"
+          }
+        },
+        {
+          "client_id": "343618653196-sh03o55mo674hl3f64su61kosfsd6382.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYn9Huej5qBnw0iGyrPRwii6lXVc6XKfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343618653196-sh03o55mo674hl3f64su61kosfsd6382.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,21 +1,21 @@
 package com.app.kimiscanner.account;
 
 public class UserAccount {
-    private String username;
-    private String password;
 
-    public UserAccount(String username, String password) {
-        this.username = username.trim();
-        this.password = password.trim();
+    private String id;
+    private String email;
+
+    public UserAccount(String userID, String email) {
+        this.id = userID;
+        this.email = email;
     }
 
-    public boolean isValid() {
-        if (0 == username.length() || 0 == password.length()) {
-            return false;
-        }
+    public String getId() {
+        return id;
+    }
 
-        // todo: check
-        return true;
+    public String getEmail() {
+        return email;
     }
 
 }

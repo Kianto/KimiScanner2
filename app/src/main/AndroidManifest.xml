@@ -24,10 +24,12 @@
         <activity
             android:name=".scanner.gallery.GalleryActivity"
             android:label="@string/title_activity_gallery"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".account.AccountActivity"
             android:label="@string/title_activity_account"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".folder.FolderActivity"
