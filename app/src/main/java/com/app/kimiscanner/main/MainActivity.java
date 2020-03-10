@@ -109,9 +109,9 @@ public class MainActivity extends AppCompatActivity
     public void onLongListFragmentInteraction(FolderInfo item) {
         FolderOptionDialog optionDialog = new FolderOptionDialog(this, new Dialog.Callback() {
             @Override
-            public void onSucceed(String message) {
+            public void onSucceed(Object... messages) {
                 FolderStore.setInstance(item);
-                switch (message) {
+                switch (messages[0].toString()) {
                     case FolderOptionDialog.DIALOG_FOLDER_SHARE:
                         sharePDFMethod();
                         break;
@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity
     private void renameMethod() {
         FolderNameDialog renameDialog = new FolderNameDialog(this, new FolderNameDialog.Callback() {
             @Override
-            public void onSucceed(String newName) {
-                if (FolderStore.getInstance().renameFolder(newName)) {
+            public void onSucceed(Object... newName) {
+                if (FolderStore.getInstance().renameFolder(newName[0].toString())) {
                     FolderStore.clear();
                     updateListItemsView();
                 }
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
     private void deleteMethod() {
         DeleteDialog deleteDialog = new DeleteDialog(this, new FolderNameDialog.Callback() {
             @Override
-            public void onSucceed(String unused) {
+            public void onSucceed(Object... unused) {
                 if (FolderStore.getInstance().deleteFolder()) {
                     FolderStore.clear();
                     updateListItemsView();

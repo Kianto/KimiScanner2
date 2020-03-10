@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">KimiScanner</string>
     <string name="action_gallery">Gallery</string>
+    <string name="action_sync_data">Sync Data</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_setting">Settings</string>
@@ -47,5 +48,6 @@
     <string name="username">Username</string>
     <string name="password">******</string>
     <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="action_select_folder">Select Folder</string>
 
 </resources>

@@ -70,7 +70,7 @@ public class CameraActivity extends AppCompatActivity
 
                 DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
                     @Override
-                    public void onSucceed(String message) {
+                    public void onSucceed(Object... unused) {
                         finish();
                     }
 

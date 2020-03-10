@@ -164,5 +164,15 @@ public class FolderInfo {
         return list;
     }
 
+    private FolderInfo() {
 
+    }
+
+    public static FolderInfo createTempInfo(String name, int page) {
+        FolderInfo info = new FolderInfo();
+        info.folderName = name;
+        info.folderPath = name;
+        info.pageNumber = page;
+        return info;
+    }
 }

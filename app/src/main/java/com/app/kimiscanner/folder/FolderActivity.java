@@ -127,8 +127,8 @@ public class FolderActivity extends AppCompatActivity {
     private void renameMethod() {
         FolderNameDialog renameDialog = new FolderNameDialog(this, new FolderNameDialog.Callback() {
             @Override
-            public void onSucceed(String newName) {
-                if (FolderStore.getInstance().renameFolder(newName)) {
+            public void onSucceed(Object... newName) {
+                if (FolderStore.getInstance().renameFolder(newName[0].toString())) {
                     getSupportActionBar().setTitle(FolderStore.getInstance().folder.folderName);
                 }
             }
@@ -146,7 +146,7 @@ public class FolderActivity extends AppCompatActivity {
     private void deleteMethod() {
         DeleteDialog deleteDialog = new DeleteDialog(this, new FolderNameDialog.Callback() {
             @Override
-            public void onSucceed(String newName) {
+            public void onSucceed(Object... newName) {
                 if (FolderStore.getInstance().deleteFolder()) {
                     finish();
                 }

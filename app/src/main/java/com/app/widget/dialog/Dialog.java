@@ -15,7 +15,7 @@ public abstract class Dialog {
 
     public interface Callback {
 
-        void onSucceed(String message);
+        void onSucceed(Object... messages);
         void onFailure(String error);
     }
 
