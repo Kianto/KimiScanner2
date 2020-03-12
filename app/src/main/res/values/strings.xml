@@ -49,5 +49,6 @@
     <string name="password">******</string>
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="action_select_folder">Select Folder</string>
+    <string name="sync_select_all"><u>Select all</u></string>
 
 </resources>

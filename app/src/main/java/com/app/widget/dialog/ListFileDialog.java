@@ -1,12 +1,15 @@
 package com.app.widget.dialog;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,58 +19,56 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.kimiscanner.model.FolderInfoChecker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListFileDialog extends Dialog {
 
-    private List<FolderInfo> folderList;
-    private List<Boolean> checkList;
+    private List<FolderInfoChecker> folderList;
 
+    // Init with default folder list from local
     public ListFileDialog(Context context, Callback callback) {
         super(context, callback);
 
-        folderList = FolderCollector.getLocalFolders();
-        checkList = new ArrayList<>();
-        for (short i = 0; i < folderList.size(); i++) {
-            checkList.add(false);
+        folderList = new ArrayList<>();
+        for (FolderInfo folder : FolderCollector.getLocalFolders()) {
+            folderList.add(new FolderInfoChecker(folder));
         }
     }
 
-    public ListFileDialog addList(List<FolderInfo> folderList) {
+    // Init with a custom folder list
+    public ListFileDialog(Context context, Callback callback, List<FolderInfoChecker> folderList) {
+        super(context, callback);
         this.folderList = folderList;
-        checkList = new ArrayList<>();
-        for (short i = 0; i < folderList.size(); i++) {
-            checkList.add(false);
-        }
+    }
+
+    public ListFileDialog setList(List<FolderInfoChecker> folderList) {
+        this.folderList = folderList;
         return this;
     }
 
     @Override
     public void show() {
+        if (preCheckIfEmpty(folderList)) {
+            Toast toast = Toast.makeText(context, "There is no folder available!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            return;
+        }
+
         final View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_list_folder, null);
 
         final RecyclerView recyclerView = inflate.findViewById(R.id.dialog_list_folder);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
-        recyclerView.setAdapter(new CheckFolderAdapter(folderList, checkList));
+        recyclerView.setAdapter(new CheckFolderAdapter(folderList));
 
-        final ConstraintLayout allCheckLayout = inflate.findViewById(R.id.dialog_list_all_layout);
-        final CheckBox checkAllBox = inflate.findViewById(R.id.dialog_list_check);
-
-        allCheckLayout.setOnClickListener(new View.OnClickListener() {
+        inflate.findViewById(R.id.dialog_select_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkAllBox.isChecked()) {
-                    for (int i = 0; i < checkList.size(); i++) {
-                        checkList.set(i, false);
-                    }
-                    checkAllBox.setChecked(false);
-                } else {
-                    for (int i = 0; i < checkList.size(); i++) {
-                        checkList.set(i, true);
-                    }
-                    checkAllBox.setChecked(true);
+                for (FolderInfoChecker checker : folderList) {
+                    if (!checker.isExisted) checker.isChecked = true;
                 }
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
@@ -79,9 +80,9 @@ public class ListFileDialog extends Dialog {
                 .setView(inflate)
                 .setPositiveButton(context.getString(R.string.action_ok), (dialog, which) -> {
                     List<String> folderPaths = new ArrayList<>();
-                    for (int i = 0; i < folderList.size(); i++) {
-                        if (checkList.get(i)) {
-                            folderPaths.add(folderList.get(i).folderPath);
+                    for (FolderInfoChecker checker : folderList) {
+                        if (checker.isChecked) {
+                            folderPaths.add(checker.getPath());
                         }
                     }
                     callback.onSucceed(folderPaths.toArray());
@@ -91,14 +92,26 @@ public class ListFileDialog extends Dialog {
                 .show();
     }
 
+    private boolean preCheckIfEmpty(List<FolderInfoChecker> folderList) {
+        if (null == folderList || folderList.isEmpty())
+            return true;
+
+        int countAvailable = 0;
+        for (FolderInfoChecker checker : folderList) {
+            if (!checker.isExisted) countAvailable++;
+        }
+        if (0 == countAvailable)
+            return true;
+
+        return false;
+    }
+
     protected class CheckFolderAdapter extends RecyclerView.Adapter<CheckFolderAdapter.ViewHolder> {
 
-        private final List<FolderInfo> mValues;
-        private final List<Boolean> mCheckedList;
+        private final List<FolderInfoChecker> mValues;
 
-        public CheckFolderAdapter(List<FolderInfo> folders, List<Boolean> checkeds) {
+        public CheckFolderAdapter(List<FolderInfoChecker> folders) {
             mValues = folders;
-            mCheckedList = checkeds;
         }
 
         @Override
@@ -110,7 +123,7 @@ public class ListFileDialog extends Dialog {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.setItemView(mValues.get(position), mCheckedList.get(position), position);
+            holder.setItemView(mValues.get(position));
         }
 
         @Override
@@ -129,19 +142,26 @@ public class ListFileDialog extends Dialog {
                 mCheck = (CheckBox) view.findViewById(R.id.list_check_folder_check);
                 mName = (TextView) view.findViewById(R.id.list_check_folder_name);
                 mPage = (TextView) view.findViewById(R.id.list_check_folder_page);
-
             }
 
-            public void setItemView(FolderInfo folder, boolean isChecked, int position) {
-                mCheck.setChecked(isChecked);
+            public void setItemView(FolderInfoChecker folderChecker) {
+                mCheck.setChecked(folderChecker.isChecked);
 
-                mName.setText(folder.folderName);
-                mPage.setText("Page: " + String.valueOf(folder.pageNumber));
+                mName.setText(folderChecker.getName());
+                mPage.setText((folderChecker.getPage().equals("-1")
+                        ? ""
+                        : "Page: " + folderChecker.getPage())
+                );
 
-                mView.findViewById(R.id.list_check_folder_layout).setOnClickListener(view -> {
-                    mCheckedList.set(position, !mCheck.isChecked());
-                    mCheck.setChecked(!mCheck.isChecked());
-                });
+                if (folderChecker.isExisted) {
+                    mName.setPaintFlags(mName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    mView.setBackgroundColor(Color.GRAY);
+                } else {
+                    mView.findViewById(R.id.list_check_folder_layout).setOnClickListener(view -> {
+                        folderChecker.isChecked = !mCheck.isChecked();
+                        mCheck.setChecked(!mCheck.isChecked());
+                    });
+                }
             }
 
         }

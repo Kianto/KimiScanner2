@@ -9,6 +9,7 @@ import com.app.kimiscanner.R;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.FolderNameDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +24,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-public class FolderActivity extends AppCompatActivity {
-
-    MenuItem linearOption, gridOption;
+public class FolderActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener<String> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,9 @@ public class FolderActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharePDFMethod();
+                startActivity(
+                        sharePDFMethod(FolderStore.getInstance().convertPDF())
+                );
             }
         });
     }
@@ -75,7 +76,13 @@ public class FolderActivity extends AppCompatActivity {
             return true;
 
         } else if (id == R.id.action_open_pdf) {
-            openPDFMethod();
+            try {
+                startActivity(
+                        openPDFMethod(FolderStore.getInstance().convertPDF())
+                );
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, "Can not open pdf file", Toast.LENGTH_SHORT).show();
+            }
             return true;
 
         } else if (id == R.id.action_rename) {
@@ -94,8 +101,7 @@ public class FolderActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void sharePDFMethod() {
-        String destPdfPath = FolderStore.getInstance().convertPDF();
+    private Intent sharePDFMethod(String destPdfPath) {
         File imageFileToShare = new File(destPdfPath);
         Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", imageFileToShare);
 
@@ -103,11 +109,10 @@ public class FolderActivity extends AppCompatActivity {
         share.setType("application/pdf");
         share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
-        startActivity(Intent.createChooser(share, "Share via"));
+        return Intent.createChooser(share, "Share via");
     }
 
-    private void openPDFMethod() {
-        String destPdfPath = FolderStore.getInstance().convertPDF();
+    private Intent openPDFMethod(String destPdfPath) {
         File file = new File(destPdfPath);
         Intent target = new Intent(Intent.ACTION_VIEW);
         Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", file);
@@ -116,12 +121,7 @@ public class FolderActivity extends AppCompatActivity {
         target.setDataAndType(contentUri,"application/pdf");
         target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        Intent intent = Intent.createChooser(target, "Open file");
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "Can not open pdf file", Toast.LENGTH_SHORT).show();
-        }
+        return Intent.createChooser(target, "Open file");
     }
 
     private void renameMethod() {
@@ -169,6 +169,26 @@ public class FolderActivity extends AppCompatActivity {
         }
     }
 
+    // <=== OnListFragmentListener ===>
+    @Override
+    public void onListFragmentInteraction(String item) {
+        // do nothing
+    }
 
+    @Override
+    public void onLongListFragmentInteraction(String item) {
+        startActivity(shareImageMethod(item));
+    }
+    // </== OnListFragmentListener ==/>
 
+    private Intent shareImageMethod(String path) {
+        File imageFileToShare = new File(path);
+        Uri contentUri = FileProvider.getUriForFile(getBaseContext(), "com.app.kimiscanner.fileprovider", imageFileToShare);
+
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/*");
+        share.putExtra(Intent.EXTRA_STREAM, contentUri);
+
+        return Intent.createChooser(share, "Share via");
+    }
 }

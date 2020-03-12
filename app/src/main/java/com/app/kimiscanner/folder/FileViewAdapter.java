@@ -17,9 +17,11 @@ import java.util.List;
 public class FileViewAdapter extends RecyclerView.Adapter<FileViewAdapter.ViewHolder> {
 
     private final List<String> mValues;
+    private FolderFragment.OnListFragmentInteractionListener<String> mListener;
 
-    public FileViewAdapter(List<String> itemPaths) {
+    public FileViewAdapter(List<String> itemPaths, FolderFragment.OnListFragmentInteractionListener<String> listener) {
         mValues = itemPaths;
+        mListener = listener;
     }
 
     @Override
@@ -58,6 +60,14 @@ public class FileViewAdapter extends RecyclerView.Adapter<FileViewAdapter.ViewHo
                     .into(mImage);
 
             mNumber.setText(String.valueOf(index));
+
+            mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mListener.onLongListFragmentInteraction(mValues.get(index));
+                    return true;
+                }
+            });
         }
 
     }
