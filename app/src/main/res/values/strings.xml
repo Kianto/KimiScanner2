@@ -50,5 +50,12 @@
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="action_select_folder">Select Folder</string>
     <string name="sync_select_all"><u>Select all</u></string>
+    <string name="title_activity_sync_data">SyncDataActivity</string>
+    <string name="tab_text_1">Login</string>
+    <string name="tab_text_2">Register</string>
+    <string name="tab_text_3">Forgot</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_reset">Reset</string>
+    <string name="auth_register">Register</string>
 
 </resources>

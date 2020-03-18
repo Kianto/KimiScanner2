@@ -2,28 +2,16 @@ package com.app.kimiscanner.account;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
-import com.app.kimiscanner.LocalPath;
 import com.app.kimiscanner.R;
-import com.app.kimiscanner.main.FolderCollector;
-import com.app.kimiscanner.model.FolderInfo;
-import com.app.kimiscanner.model.FolderInfoChecker;
-import com.app.widget.dialog.Dialog;
-import com.app.widget.dialog.ListFileDialog;
-import com.google.android.gms.common.SignInButton;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
 
 
 /**
@@ -31,11 +19,7 @@ import java.util.List;
  */
 public class AccountFragment extends Fragment {
 
-    private ViewHolder viewHolder;
-
     private IFragmentInteractionListener activityListener;
-
-    private UserAccount account;
 
     public AccountFragment() {
     }
@@ -45,8 +29,15 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        viewHolder = new ViewHolder();
-        viewHolder.load(view);
+//        viewHolder = new ViewHolder();
+//        viewHolder.load(view);
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getChildFragmentManager(), this);
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+
+        TabLayout tabs = view.findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
         return view;
     }
@@ -62,168 +53,29 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    protected class ViewHolder {
-        Button logoutBtn, backupBtn, restoreBtn;
-        LinearLayout syncLayout;
-        EditText usernameEdt;
-        SignInButton googleSignBtn;
-
-        public void load(View view) {
-            googleSignBtn = view.findViewById(R.id.auth_login);
-            logoutBtn = view.findViewById(R.id.auth_logout);
-            backupBtn = view.findViewById(R.id.acc_backup);
-            restoreBtn = view.findViewById(R.id.acc_restore);
-            syncLayout = view.findViewById(R.id.acc_sync_layout);
-            usernameEdt = view.findViewById(R.id.auth_username);
-
-            setListener();
-        }
-
-        private void setListener() {
-            View.OnClickListener listener = getViewListener();
-            logoutBtn.setOnClickListener(listener);
-            backupBtn.setOnClickListener(listener);
-            restoreBtn.setOnClickListener(listener);
-            googleSignBtn.setOnClickListener(listener);
-        }
-
-        public void turnLoggedOut() {
-            syncLayout.setVisibility(View.GONE);
-            logoutBtn.setVisibility(View.GONE);
-            googleSignBtn.setVisibility(View.VISIBLE);
-            usernameEdt.setText("");
-        }
-
-        public void turnLoggedIn(UserAccount account) {
-            syncLayout.setVisibility(View.VISIBLE);
-            logoutBtn.setVisibility(View.VISIBLE);
-            googleSignBtn.setVisibility(View.GONE);
-            usernameEdt.setText(account.getEmail());
-        }
+    public void registerAccount(String email, String password) {
+        activityListener.onRegisterFragmentInteraction(email, password);
     }
 
-    private View.OnClickListener getViewListener() {
-        return view -> {
-            int id = view.getId();
-            switch (id) {
-                case R.id.auth_login:
-                    activityListener.onSignInFragmentInteraction();
-                    break;
-
-                case R.id.auth_logout:
-                    logoutAccount();
-                    break;
-
-                case R.id.acc_backup:
-                    backupData();
-                    break;
-
-                case R.id.acc_restore:
-                    restoreData();
-                    break;
-
-                default:
-            }
-        };
+    public void loginAccount(String email, String password) {
+        activityListener.onSignInFragmentInteraction(email, password);
     }
 
-    private void logoutAccount() {
-        account = null;
-        viewHolder.turnLoggedOut();
-        activityListener.onLogoutFragmentInteraction();
+    public void forgotPassword(String email) {
+        activityListener.onForgotFragmentInteraction(email);
     }
 
-    public void updateUser(UserAccount account) {
-        if (null == account) return;
-
-        this.account = account;
-        viewHolder.turnLoggedIn(account);
-    }
-
-    private void backupData() {
-        StorageConnector.getInstance().getList(account, new StorageConnector.OnListSuccessListener() {
-            @Override
-            public void onSuccess(List<String> folderNames) {
-                List<FolderInfoChecker> folderCheckers = new ArrayList<>();
-                for (FolderInfo folder : FolderCollector.getLocalFolders()) {
-                    folderCheckers.add(new FolderInfoChecker(folder));
-                }
-                folderCheckers = checkExistList(folderCheckers, folderNames);
-
-                new ListFileDialog(
-                        getContext(),
-                        new Dialog.Callback() {
-                            @Override
-                            public void onSucceed(Object... messages) {
-                                for (Object obj : messages) {
-                                    Log.d("Backup", obj.toString());
-                                    StorageConnector.getInstance().upload(account, new FolderInfo(obj.toString()));
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(String error) {
-                                // do nothing
-                            }
-                        },
-                        folderCheckers
-                ).show();
-            }
-        });
-    }
-
-    private void restoreData() {
-        StorageConnector.getInstance().getList(account, new StorageConnector.OnListSuccessListener() {
-            @Override
-            public void onSuccess(List<String> folderNames) {
-                List<FolderInfoChecker> folderCheckers = new ArrayList<>();
-                for (String name : folderNames) {
-                    folderCheckers.add(new FolderInfoChecker(name, -1));
-                }
-                List<String> localList = new ArrayList<>();
-                for (FolderInfo folder : FolderCollector.getLocalFolders()) {
-                    localList.add(folder.folderName);
-                }
-                folderCheckers = checkExistList(folderCheckers, localList);
-
-                new ListFileDialog(
-                        getContext(),
-                        new Dialog.Callback() {
-                            @Override
-                            public void onSucceed(Object... messages) {
-                                for (Object obj : messages) {
-                                    Log.d("Restore", obj.toString());
-                                    StorageConnector.getInstance().download(account, obj.toString(), LocalPath.ROOT_PATH);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(String error) {
-                                // do nothing
-                            }
-                        },
-                        folderCheckers
-                ).show();
-            }
-        });
-    }
-
-    private List<FolderInfoChecker> checkExistList(List<FolderInfoChecker> checkerList, List<String> localList) {
-        for (FolderInfoChecker checker : checkerList) {
-            for (String local : localList) {
-                if (checker.getName().equals(local)) {
-                    checker.isExisted = true;
-                    break;
-                }
-            }
-        }
-        return checkerList;
+    public void loginWithGoogleAccount() {
+        activityListener.onGoogleSignInFragmentInteraction();
     }
 
     public interface IFragmentInteractionListener {
-        void onSignInFragmentInteraction();
-
+        void onGoogleSignInFragmentInteraction();
+        void onRegisterFragmentInteraction(String email, String password);
+        void onSignInFragmentInteraction(String email, String password);
+        void onForgotFragmentInteraction(String email);
         void onLogoutFragmentInteraction();
     }
+
 
 }

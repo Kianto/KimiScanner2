@@ -1,5 +1,6 @@
 package com.app.kimiscanner.account;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,20 +11,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.app.kimiscanner.R;
 import com.google.firebase.auth.AuthCredential;
@@ -39,7 +37,7 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private AccountFragment mAccountFragment;
+    private SyncDataFragment mSyncDataFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +59,6 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Set Fragment
-        mAccountFragment = new AccountFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
-        transaction.replace(R.id.account_fragment, mAccountFragment);
-        transaction.commit();
     }
 
     @Override
@@ -85,9 +76,68 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    private void signIn() {
+    private void signInByGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void signIn(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUser(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            hideKeyboard();
+                            Snackbar.make(findViewById(R.id.auth_log), "Authentication Failed!", Snackbar.LENGTH_SHORT).show();
+                        }
+                        // ...
+                    }
+                });
+    }
+
+    private void registerAccount(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUser(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            hideKeyboard();
+                            Snackbar.make(findViewById(R.id.auth_log), "Register Failed!", Snackbar.LENGTH_SHORT).show();
+                        }
+                        // ...
+                    }
+                });
+    }
+
+    private void forgotPassword(String email) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            hideKeyboard();
+                            Snackbar.make(findViewById(R.id.auth_log), "Message sent. Please check your email!", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            hideKeyboard();
+                            Snackbar.make(findViewById(R.id.auth_log), "Reset Password Failed!", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void signOut() {
@@ -100,6 +150,12 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d(TAG, "signOutWithCredential:success");
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
+                        transaction.remove(mSyncDataFragment);
+                        transaction.commit();
+
+                        mSyncDataFragment = null;
                     }
                 });
     }
@@ -137,12 +193,11 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUser(user);
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Snackbar.make(findViewById(R.id.auth_login), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-
+                            hideKeyboard();
+                            Snackbar.make(findViewById(R.id.auth_log), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                         }
                         // ...
                     }
@@ -152,7 +207,12 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
     private void updateUser(FirebaseUser user) {
         if (null != user) {
             UserAccount userAccount = new UserAccount(user.getUid(), user.getEmail());
-            mAccountFragment.updateUser(userAccount);
+
+            mSyncDataFragment = new SyncDataFragment(userAccount);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
+            transaction.replace(R.id.account_fragment, mSyncDataFragment);
+            transaction.commit();
         }
     }
 
@@ -164,14 +224,41 @@ public class AccountActivity extends AppCompatActivity implements AccountFragmen
         updateUser(currentUser);
     }
 
+    // <=== Fragment Interaction ===>
     @Override
-    public void onSignInFragmentInteraction() {
-        signIn();
+    public void onGoogleSignInFragmentInteraction() {
+        signInByGoogle();
+    }
+
+    @Override
+    public void onRegisterFragmentInteraction(String email, String password) {
+        hideKeyboard();
+        registerAccount(email, password);
+    }
+
+    @Override
+    public void onSignInFragmentInteraction(String email, String password) {
+        hideKeyboard();
+        signIn(email, password);
+    }
+
+    @Override
+    public void onForgotFragmentInteraction(String email) {
+        hideKeyboard();
+        forgotPassword(email);
     }
 
     @Override
     public void onLogoutFragmentInteraction() {
         signOut();
+    }
+    // </== Fragment Interaction ==/>
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+        }
     }
 
 }

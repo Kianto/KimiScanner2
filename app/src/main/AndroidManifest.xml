@@ -24,27 +24,27 @@
         <activity
             android:name=".scanner.gallery.GalleryActivity"
             android:label="@string/title_activity_gallery"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".account.AccountActivity"
             android:label="@string/title_activity_account"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".folder.FolderActivity"
             android:label="@string/title_activity_folder"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".scanner.camera.CameraActivity"
             android:label="@string/title_activity_camera"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
