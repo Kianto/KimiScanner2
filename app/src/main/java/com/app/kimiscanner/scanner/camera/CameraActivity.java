@@ -57,33 +57,7 @@ public class CameraActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case android.R.id.home:
-
-                if (getSupportFragmentManager().getFragments().size() > 1) {
-                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
-                    if (fragment instanceof ProcessFragment) {
-                        PhotoStore.getInstance().deleteProcessing();
-                        Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
-                    }
-                    this.onCloseFragmentInteraction(fragment);
-                    break;
-                }
-
-                DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
-                    @Override
-                    public void onSucceed(Object... unused) {
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        // do nothing
-                    }
-                });
-                if (PhotoStore.getInstance().hasPhoto())
-                    closingDialog.setWarningId(R.string.action_close_captured_camera);
-                else
-                    closingDialog.setWarningId(R.string.action_close_camera);
-                closingDialog.show();
+                backAction();
                 break;
         }
         return true;
@@ -97,6 +71,40 @@ public class CameraActivity extends AppCompatActivity
         if (!res) {
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backAction();
+    }
+
+    private void backAction() {
+        if (getSupportFragmentManager().getFragments().size() > 1) {
+            ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
+            if (fragment instanceof ProcessFragment) {
+                PhotoStore.getInstance().deleteProcessing();
+                Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
+            }
+            this.onCloseFragmentInteraction(fragment);
+            return;
+        }
+
+        DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
+            @Override
+            public void onSucceed(Object... unused) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // do nothing
+            }
+        });
+        if (PhotoStore.getInstance().hasPhoto())
+            closingDialog.setWarningId(R.string.action_close_captured_camera);
+        else
+            closingDialog.setWarningId(R.string.action_close_camera);
+        closingDialog.show();
     }
 
     // <@== IFragmentInteractionListener ==@>

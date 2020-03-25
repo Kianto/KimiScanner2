@@ -50,32 +50,9 @@ public class GalleryActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case android.R.id.home:
-                if (null != mCropFragment) {
-                    onCloseFragmentInteraction((ScanFragment) mCropFragment);
-                    break;
-                } else if (null != mProcessFragment) {
-                    onCloseFragmentInteraction((ScanFragment) mProcessFragment);
-                    break;
-                }
-
-                DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
-                    @Override
-                    public void onSucceed(Object... unused) {
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        // do nothing
-                    }
-                });
-                if (PhotoStore.getInstance().hasPhoto())
-                    closingDialog.setWarningId(R.string.action_close_captured_camera);
-                else
-                    closingDialog.setWarningId(R.string.action_close_camera);
-                closingDialog.show();
+                backAction();
                 break;
         }
         return true;
@@ -85,6 +62,38 @@ public class GalleryActivity extends AppCompatActivity
     public void onListFragmentInteraction(int index) {
         PhotoStore.getInstance().setProcessingIndex(index);
         onCameraFragmentInteraction();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backAction();
+    }
+
+    private void backAction() {
+        if (null != mCropFragment) {
+            onCloseFragmentInteraction((ScanFragment) mCropFragment);
+            return;
+        } else if (null != mProcessFragment) {
+            onCloseFragmentInteraction((ScanFragment) mProcessFragment);
+            return;
+        }
+
+        DeleteDialog closingDialog = new DeleteDialog(this, new Dialog.Callback() {
+            @Override
+            public void onSucceed(Object... unused) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // do nothing
+            }
+        });
+        if (PhotoStore.getInstance().hasPhoto())
+            closingDialog.setWarningId(R.string.action_close_captured_camera);
+        else
+            closingDialog.setWarningId(R.string.action_close_camera);
+        closingDialog.show();
     }
 
     // <== IFragmentInteractionListener ==>
@@ -116,7 +125,7 @@ public class GalleryActivity extends AppCompatActivity
         if (fragment instanceof ProcessFragment) {
             mProcessFragment = null;
             FragmentManager manager = getSupportFragmentManager();
-            ((GalleryFragment)manager.getFragments().get(0)).update();
+            ((GalleryFragment) manager.getFragments().get(0)).update();
         }
         if (fragment instanceof CropFragment) {
             mCropFragment = null;
