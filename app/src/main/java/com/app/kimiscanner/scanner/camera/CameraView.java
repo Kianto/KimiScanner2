@@ -23,6 +23,7 @@ import org.opencv.core.Mat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -199,6 +200,9 @@ public class CameraView extends SurfaceView implements Callback {
 
         int cameraId = Camera.getNumberOfCameras() - 1;
         parameters.setRotation(setCameraDisplayOrientation(activity, cameraId, mCamera));
+
+        Camera.Size optSize = getOptimalPictureSize(parameters);
+        parameters.setPictureSize(optSize.width, optSize.height);
         mCamera.setParameters(parameters);
     }
 
@@ -368,6 +372,22 @@ public class CameraView extends SurfaceView implements Callback {
             }
         }
         return size;
+    }
+
+    private Camera.Size getOptimalPictureSize(Camera.Parameters parameters) {
+        List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
+        int maxW = 0, maxH = 0;
+        Camera.Size resSize = null;
+
+        for (Camera.Size size : sizes) {
+            if (maxW < size.width || maxH < size.height) {
+                maxW = size.width;
+                maxH = size.height;
+                resSize = size;
+            }
+        }
+
+        return resSize;
     }
 
     public Corners getDetectedCorners() {

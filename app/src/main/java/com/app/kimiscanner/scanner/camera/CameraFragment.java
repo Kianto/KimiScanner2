@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,6 +175,7 @@ public class CameraFragment extends ScanFragment {
     // <@=== Camera handle ===@>
     private int cameraWidth;
     private int cameraHeight;
+    private int maxPWidth, maxPHeight;
     private Camera mCamera;
     private boolean isFinish = false;
     private CameraView mPreview;
@@ -191,6 +193,7 @@ public class CameraFragment extends ScanFragment {
             if (null == camera) {
                 camera = Camera.open(Camera.getNumberOfCameras() - 1);
             }
+            setMaxPicSize(camera);
             return camera;
 
         } catch (Exception e) {
@@ -199,16 +202,28 @@ public class CameraFragment extends ScanFragment {
         }
     }
 
+    private void setMaxPicSize(Camera camera) {
+        List<Camera.Size> sizes = camera.getParameters().getSupportedPictureSizes();
+        maxPWidth = 0;
+        maxPHeight = 0;
+        for (Camera.Size size : sizes) {
+            if (maxPWidth < size.width) maxPWidth = size.width;
+            if (maxPHeight < size.height) maxPHeight = size.height;
+        }
+    }
+
     private void resumePreview() {
         if (!isFinish) {
             mPreview = new CameraView(getActivity(), mCamera, viewHolder.previewLayout, cameraWidth, cameraHeight);
 
-            Camera.Parameters parameters3 = mCamera.getParameters();
-            if (parameters3.getSupportedFocusModes().contains("auto")) {
-                if (parameters3.getSupportedFocusModes().contains("auto")) {
-                    parameters3.setFocusMode("auto");
+            Camera.Parameters camParameters = mCamera.getParameters();
+            if (camParameters.getSupportedFocusModes().contains("auto")) {
+                if (camParameters.getSupportedFocusModes().contains("auto")) {
+                    camParameters.setFocusMode("auto");
                 }
-                mCamera.setParameters(parameters3);
+
+                camParameters.setPictureSize(maxPWidth, maxPHeight);
+                mCamera.setParameters(camParameters);
                 mPreview.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         try {
@@ -226,6 +241,7 @@ public class CameraFragment extends ScanFragment {
                                     parameters.setFlashMode("off");
                                 }
                             }
+
                             mCamera.setParameters(parameters);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -276,6 +292,7 @@ public class CameraFragment extends ScanFragment {
                 parameters.setFlashMode("off");
             }
         }
+
         mCamera.setParameters(parameters);
     }
 
@@ -285,43 +302,12 @@ public class CameraFragment extends ScanFragment {
             camera.stopPreview();
 
             getCropImage(bArr);
-
         }
     };
 
     public void getCropImage(final byte[] bArr) {
         new Thread(() -> {
-            final int max = 8000000;
-            final int maxperm = 130000;
-
-            ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-            int largeMemoryClass = (manager.getLargeMemoryClass() * maxperm) / 8;
-            if (largeMemoryClass > max) {
-                largeMemoryClass = max;
-            }
-
             Bitmap nowBitmap = BitmapFactory.decodeByteArray(bArr, 0, bArr.length);
-
-            int width = nowBitmap.getWidth();
-            int height = nowBitmap.getHeight();
-            int size = width * height;
-            float f1 = (float) size;
-            float f2 = (float) largeMemoryClass;
-
-            if (size < largeMemoryClass) {
-                Matrix matrix = new Matrix();
-                matrix.postScale(2.0f, 2.0f);
-
-                nowBitmap = Bitmap.createBitmap(nowBitmap, 0, 0, nowBitmap.getWidth(), nowBitmap.getHeight(), matrix, true);
-
-            } else {
-                float fScale = (float) Math.sqrt((double) f2 / (double) f1);
-
-                Matrix matrix = new Matrix();
-                matrix.postScale(fScale, fScale);
-
-                nowBitmap = Bitmap.createBitmap(nowBitmap, 0, 0, nowBitmap.getWidth(), nowBitmap.getHeight(), matrix, true);
-            }
 
             if (nowBitmap.getWidth() > nowBitmap.getHeight()) {
                 Matrix matrix = new Matrix();
