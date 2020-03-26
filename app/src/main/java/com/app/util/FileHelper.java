@@ -34,7 +34,7 @@ public class FileHelper {
                                     + getNewRandomFileName() + "_" + id + ".jpeg")
                     )
             );
-            file.compress(Bitmap.CompressFormat.JPEG, 85, bufferedOutputStream);
+            file.compress(Bitmap.CompressFormat.JPEG, 100, bufferedOutputStream);
             bufferedOutputStream.flush();
             bufferedOutputStream.close();
 
