@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".account.authview.AuthFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/auth_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/general"
+            android:textColor="#979797"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary" />
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/text_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/auth_username_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:src="@drawable/ic_account_circle" />
+
+            <EditText
+                android:id="@+id/auth_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/auth_username_icon"
+                android:paddingTop="13dp"
+                android:textColor="#4b4b4b"
+                android:textSize="16sp"
+                android:hint="example@email.com"/>
+
+        </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/auth_password_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/auth_password_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_key" />
+
+                <EditText
+                    android:id="@+id/auth_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/auth_password_icon"
+                    android:inputType="textPassword"
+                    android:paddingTop="13dp"
+                    android:textColor="#4b4b4b"
+                    android:textSize="16sp"
+                    android:hint="password"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/auth_repassword_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/auth_repassword_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_key" />
+
+                <EditText
+                    android:id="@+id/auth_repassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/auth_repassword_icon"
+                    android:inputType="textPassword"
+                    android:paddingTop="13dp"
+                    android:textColor="#4b4b4b"
+                    android:textSize="16sp"
+                    android:hint="type password again"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/auth_log"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:background="@drawable/button_shape"
+                android:paddingStart="@dimen/image_button"
+                android:paddingEnd="@dimen/image_button"
+                android:text="Login"
+                android:textAllCaps="false"
+                android:textColor="@color/colorImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:text="or"
+                android:layout_gravity="center"/>
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/auth_google_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:tooltipText="Login by Google account" />
+
+        </LinearLayout>
+
+</RelativeLayout>

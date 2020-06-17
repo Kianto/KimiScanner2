@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">KimiScanner</string>
+    <string name="action_gallery">Gallery</string>
+    <string name="action_sync_data">Sync Data</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_setting">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Permission Dialogs -->
+    <string name="dialog_are_you_sure">Are you sure? You won\'t be able to use KimiScanner if you deny permission.</string>
+    <string name="dialog_deny">Yes, deny</string>
+    <string name="dialog_try_again">Try again</string>
+    <string name="dialog_not_now">Not now</string>
+    <string name="dialog_goto_settings">Go to settings</string>
+    <string name="dialog_help_text">To use KimiScanner, go to settings and turn on permissions for storage and camera.</string>
+
+    <!-- Folder Menu -->
+    <string name="action_open_pdf">Open in PDF</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_delete">Delete</string>
+
+    <!-- Dialog -->
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="dialog_delete_folder">Are you sure delete this folder?</string>
+    <string name="action_close_camera">Do you want to close camera?</string>
+    <string name="action_close_captured_camera">Are you sure delete all captured pictures and close camera?</string>
+    <string name="action_cancel_process">Process is canceled</string>
+    <string name="action_remove">Remove</string>
+
+    <string name="title_activity_folder">FolderActivity</string>
+    <string name="title_activity_account">UserActivity</string>
+    <string name="general">Account</string>
+    <string name="username">Username</string>
+    <string name="password">******</string>
+    <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="action_select_folder">Select Folder</string>
+    <string name="sync_select_all"><u>Select all</u></string>
+    <string name="title_activity_sync_data">SyncDataActivity</string>
+    <string name="tab_text_1">Login</string>
+    <string name="tab_text_2">Register</string>
+    <string name="tab_text_3">Forgot</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_reset">Reset</string>
+    <string name="auth_register">Register</string>
+
+</resources>
