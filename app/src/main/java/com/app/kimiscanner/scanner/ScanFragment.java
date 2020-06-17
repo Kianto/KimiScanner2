@@ -31,7 +31,7 @@ public abstract class ScanFragment extends Fragment {
      */
     public interface IFragmentInteractionListener {
         void onCameraFragmentInteraction();
-        void onProcessFragmentInteraction();
+        void onProcessFragmentInteraction(boolean isFromCamera);
         void onCloseFragmentInteraction(ScanFragment fragment);
         void onDoneAllWorkInteraction();
     }

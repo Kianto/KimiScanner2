@@ -107,7 +107,7 @@ public class GalleryActivity extends AppCompatActivity
     }
 
     @Override
-    public void onProcessFragmentInteraction() {
+    public void onProcessFragmentInteraction(boolean isFromCamera) {
         mCropFragment = new CropFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);

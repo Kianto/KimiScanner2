@@ -332,7 +332,7 @@ public class CameraFragment extends ScanFragment {
             PhotoStore.getInstance().addCorners(corners);
 
             //activityListener.onCameraFragmentInteraction();
-            activityListener.onProcessFragmentInteraction();
+            activityListener.onProcessFragmentInteraction(true);
         }).start();
     }
 

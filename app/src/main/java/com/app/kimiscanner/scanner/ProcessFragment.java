@@ -136,7 +136,7 @@ public class ProcessFragment extends ScanFragment {
                 break;
 
             case R.id.process_crop:
-                activityListener.onProcessFragmentInteraction();
+                activityListener.onProcessFragmentInteraction(false);
                 break;
 
             case R.id.process_delete:
