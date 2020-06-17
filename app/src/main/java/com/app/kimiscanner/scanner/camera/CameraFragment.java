@@ -7,7 +7,6 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.scanner.PhotoStore;
 import com.app.kimiscanner.scanner.ScanFragment;
-import com.app.kimiscanner.scanner.SomeDetector;
+import com.app.kimiscanner.scanner.DeepDetector;
 import com.app.util.Corners;
 
 import org.opencv.core.Mat;
@@ -323,7 +322,7 @@ public class CameraFragment extends ScanFragment {
             if (null == corners) {
                 Mat orig = new Mat();
                 org.opencv.android.Utils.bitmapToMat(nowBitmap, orig);
-                corners = new Corners(SomeDetector.getEdgePoints(orig), orig.size());
+                corners = new Corners(DeepDetector.getEdgePoints(orig), orig.size());
             }
 
             corners.layoutHeight = viewHolder.previewHolder.getHeight();

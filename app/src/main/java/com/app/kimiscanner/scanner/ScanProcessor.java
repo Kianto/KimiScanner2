@@ -51,7 +51,7 @@ public class ScanProcessor {
 
     public static Corners processPicture(Mat previewFrame) {
         ArrayList<MatOfPoint> contours = findContours(previewFrame);
-        return getCorners(contours, previewFrame.size());
+        return getCornersFromContour(contours, previewFrame.size());
     }
 
     public Mat cropPicture(Mat picture, List<Point> pts) {
@@ -96,7 +96,7 @@ public class ScanProcessor {
         return (null != corners ? corners : new Corners(null, null));
     }
 
-    public static Corners getCorners(ArrayList<MatOfPoint> contours, Size size) {
+    public static Corners getCornersFromContour(ArrayList<MatOfPoint> contours, Size size) {
         int indexTo;
 
         if (contours.size() > 0 && contours.size() <= 5) {

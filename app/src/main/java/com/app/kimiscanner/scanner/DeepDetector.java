@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SomeDetector {
+public class DeepDetector {
 
     private static final int THRESHOLD_LEVEL = 2;
     private static final double AREA_LOWER_THRESHOLD = 0.2;
