@@ -331,7 +331,8 @@ public class CameraFragment extends ScanFragment {
             PhotoStore.getInstance().addBitmap(nowBitmap);
             PhotoStore.getInstance().addCorners(corners);
 
-            activityListener.onCameraFragmentInteraction();
+            //activityListener.onCameraFragmentInteraction();
+            activityListener.onProcessFragmentInteraction();
         }).start();
     }
 
