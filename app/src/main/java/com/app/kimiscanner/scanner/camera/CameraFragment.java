@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,8 @@ public class CameraFragment extends ScanFragment {
     private ViewHolder viewHolder;
     private ScanCamera scanCamera;
     private boolean isFlashOn = false;
+
+    private ProgressBar pbLoading;
 
     public CameraFragment() {
     }
@@ -92,6 +95,8 @@ public class CameraFragment extends ScanFragment {
             storeImage = view.findViewById(R.id.camera_store_image);
             storeNumber = view.findViewById(R.id.camera_store_number);
             storeLayout = view.findViewById(R.id.camera_store_layout);
+
+            pbLoading = view.findViewById(R.id.pbLoading);
 
             setListener();
         }
@@ -317,6 +322,13 @@ public class CameraFragment extends ScanFragment {
                 nowBitmap = Bitmap.createBitmap(nowBitmap, 0, 0, nowBitmap.getWidth(), nowBitmap.getHeight(), matrix, true);
             }
 
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pbLoading.setVisibility(View.VISIBLE);
+                }
+            });
+
             // Put extras
             Corners corners = mPreview.getDetectedCorners();
             if (null == corners) {
@@ -330,6 +342,13 @@ public class CameraFragment extends ScanFragment {
 
             PhotoStore.getInstance().addBitmap(nowBitmap);
             PhotoStore.getInstance().addCorners(corners);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pbLoading.setVisibility(View.GONE);
+                }
+            });
 
             //activityListener.onCameraFragmentInteraction();
             activityListener.onProcessFragmentInteraction(true);
