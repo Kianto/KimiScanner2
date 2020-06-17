@@ -24,8 +24,8 @@ import java.util.List;
 public class DeepDetector {
 
     private static final int THRESHOLD_LEVEL = 2;
-    private static final double AREA_LOWER_THRESHOLD = 0.2;
-    private static final double AREA_UPPER_THRESHOLD = 0.98;
+    public static final double AREA_LOWER_THRESHOLD = 0.2;
+    public static final double AREA_UPPER_THRESHOLD = 0.98;
     private static final double DOWNSCALE_IMAGE_SIZE = 600f;
 
    /* public Bitmap getScannedBitmap(Bitmap bitmap, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
@@ -184,7 +184,7 @@ public class DeepDetector {
 
     }
 
-    private static boolean isRectangle(MatOfPoint2f polygon, int srcArea) {
+    public static boolean isRectangle(MatOfPoint2f polygon, int srcArea) {
         MatOfPoint polygonInt = MathUtils.toMatOfPointInt(polygon);
 
         if (polygon.rows() != 4) {

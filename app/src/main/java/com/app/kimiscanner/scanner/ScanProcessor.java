@@ -105,15 +105,17 @@ public class ScanProcessor {
             indexTo = 4;
         }
 
+        double srcArea = size.height * size.width;
+
         for (int i = 0; i < contours.size(); i++) {
             if (i <= indexTo) {
                 MatOfPoint2f c2f = new MatOfPoint2f(contours.get(i).toArray());
                 double peri = Imgproc.arcLength(c2f, true);
                 MatOfPoint2f approx = new MatOfPoint2f();
                 Imgproc.approxPolyDP(c2f, approx, 0.02 * peri, true);
-                List<Point> points = approx.toList();
 
-                if (points.size() == 4) {
+                if(DeepDetector.isRectangle(approx, (int) srcArea)){
+                    List<Point> points = approx.toList();
                     List<Point> foundPoints = sortPoint(points);
                     return new Corners(foundPoints, size);
                 }
