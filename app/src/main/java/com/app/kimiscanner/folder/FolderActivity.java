@@ -41,7 +41,8 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> sharePDF());
+        fab.setOnClickListener(view -> /*sharePDF()*/
+        sendPhoto());
     }
 
     @Override
@@ -123,6 +124,10 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
 
     private void sharePDF() {
         presenter.process(SHARE_IMAGE_CODE, FolderStore.getInstance().convertPDF());
+    }
+
+    private void sendPhoto(){
+        presenter.process(SHARE_IMAGE_CODE, FolderStore.getInstance().folder.filePaths.get(0));
     }
 
 

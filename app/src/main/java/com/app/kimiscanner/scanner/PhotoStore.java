@@ -82,9 +82,31 @@ public class PhotoStore {
     }
 
     public void clear() {
-        processedPhotos.clear();
-        capturedPhotos.clear();
-        cornersList.clear();
+        resetBitmap();
+
+        if(processedPhotos != null) {
+            processedPhotos.clear();
+        }
+        if(capturedPhotos != null) {
+            capturedPhotos.clear();
+        }
+        if(cornersList != null) {
+            cornersList.clear();
+        }
+    }
+
+    public void resetBitmap(){
+        if(processedPhotos != null){
+            for(int i=0;i<processedPhotos.size();i++){
+                processedPhotos.get(i).recycle();
+            }
+        }
+
+        if(capturedPhotos != null){
+            for(int i=0; i<capturedPhotos.size(); i++){
+                capturedPhotos.get(i).recycle();
+            }
+        }
     }
 
     public List<Bitmap> getProcessedPhotos() {

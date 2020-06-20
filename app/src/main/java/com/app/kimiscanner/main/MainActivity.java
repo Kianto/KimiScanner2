@@ -2,6 +2,9 @@ package com.app.kimiscanner.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,21 +12,33 @@ import com.app.kimiscanner.BaseView;
 import com.app.kimiscanner.PermissionHelper;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.AccountActivity;
+import com.app.kimiscanner.scanner.CropFragment;
+import com.app.kimiscanner.scanner.PhotoStore;
+import com.app.kimiscanner.scanner.ProcessFragment;
+import com.app.kimiscanner.scanner.ScanFragment;
 import com.app.kimiscanner.scanner.camera.CameraActivity;
 import com.app.kimiscanner.folder.FolderActivity;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.kimiscanner.scanner.gallery.GalleryActivity;
+import com.app.kimiscanner.scanner.gallery.GalleryFragment;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import org.opencv.android.OpenCVLoader;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +51,9 @@ public class MainActivity extends BaseView.BaseActivity
 
     final static String LONG_OPEN_FOLDER_OPTION_CODE = "open-option";
     final static String UPDATE_LIST_CODE = "update-list";
+
+    ProgressBar pbLoading;
+    boolean isLoading = false;
 
     static {
         if (!OpenCVLoader.initDebug())
@@ -60,9 +78,15 @@ public class MainActivity extends BaseView.BaseActivity
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(view.getContext(), CameraActivity.class), REQUEST_CODE_CAMERA);
+                if(isLoading){
+                    return;
+                }
+
+                startActivityForResult(new Intent(MainActivity.this, CameraActivity.class), REQUEST_CODE_CAMERA);
             }
         });
+
+        pbLoading = findViewById(R.id.pbLoading);
 
         new PermissionHelper(this).requestPermission();
     }
@@ -79,6 +103,11 @@ public class MainActivity extends BaseView.BaseActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        if(isLoading){
+            return false;
+        }
+
         int id = item.getItemId();
 
         if (id == R.id.action_gallery) {
@@ -102,6 +131,11 @@ public class MainActivity extends BaseView.BaseActivity
 
     @Override
     public void onListFragmentInteraction(FolderInfo item) {
+
+        if(isLoading){
+            return;
+        }
+
         FolderStore.setInstance(item);
         startActivityForResult(new Intent(this, FolderActivity.class), REQUEST_CODE_FOLDER);
     }
@@ -116,19 +150,44 @@ public class MainActivity extends BaseView.BaseActivity
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == Activity.RESULT_OK) {
             if (null != resultData) {
                 if (null != resultData.getClipData()) {
-                    // Process multi selected photos
+                   /* // Process multi selected photos
                     List<Uri> uriList = new ArrayList<>();
                     for (int i = 0; i < resultData.getClipData().getItemCount(); i++) {
                         uriList.add(resultData.getClipData().getItemAt(i).getUri());
                     }
 
-                    GalleryRequester.startGalleryActivity(this, uriList);
+                    GalleryRequester.startGalleryActivity(this, uriList);*/
+                   return;
 
                 } else {
+                    isLoading = true;
+
                     // Process a single selected photo
                     Uri uri = resultData.getData();
 
-                    GalleryRequester.startGalleryActivity(this, uri);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbLoading.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                            GalleryRequester.startGalleryActivity(MainActivity.this, uri);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbLoading.setVisibility(View.GONE);
+                                }
+                            });
+
+                            isLoading = false;
+                        }
+                    }).start();
+
                 }
             }
             return;
@@ -153,5 +212,4 @@ public class MainActivity extends BaseView.BaseActivity
         }
         // do nothing else
     }
-
 }

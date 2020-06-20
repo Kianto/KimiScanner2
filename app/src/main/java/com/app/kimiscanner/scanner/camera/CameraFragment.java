@@ -47,7 +47,9 @@ public class CameraFragment extends ScanFragment {
         viewHolder.load(view);
 
         loadCamera(getContext(), viewHolder.previewLayout);
-        loadImageStore();
+        //loadImageStore();
+
+        PhotoStore.getInstance().clear();
 
         return view;
     }
@@ -68,33 +70,35 @@ public class CameraFragment extends ScanFragment {
         mCamera = getCameraInstance();
         resumePreview();
 
-        loadImageStore();
+        //loadImageStore();
+
+        PhotoStore.getInstance().clear();
     }
 
-    private void loadImageStore() {
+   /* private void loadImageStore() {
         if (PhotoStore.getInstance().hasPhoto()) {
             viewHolder.showImageStore(PhotoStore.getInstance().getProcessingBitmap(), PhotoStore.getInstance().size());
         } else {
             viewHolder.showImageStore(null, 0);
         }
-    }
+    }*/
 
     private class ViewHolder {
         ImageView shootBtn, flashBtn;
         RelativeLayout previewLayout;
         RelativeLayout previewHolder;
         RelativeLayout storeLayout;
-        ImageView storeImage;
-        TextView storeNumber;
+        /*ImageView storeImage;
+        TextView storeNumber;*/
 
         public void load(View view) {
             shootBtn = view.findViewById(R.id.camera_shoot);
             flashBtn = view.findViewById(R.id.camera_flash);
             previewLayout = view.findViewById(R.id.camera_preview_layout);
             previewHolder = view.findViewById(R.id.camera_preview_holder);
-            storeImage = view.findViewById(R.id.camera_store_image);
+           /* storeImage = view.findViewById(R.id.camera_store_image);
             storeNumber = view.findViewById(R.id.camera_store_number);
-            storeLayout = view.findViewById(R.id.camera_store_layout);
+            storeLayout = view.findViewById(R.id.camera_store_layout);*/
 
             pbLoading = view.findViewById(R.id.pbLoading);
 
@@ -105,10 +109,10 @@ public class CameraFragment extends ScanFragment {
             View.OnClickListener listener = getViewListener();
             shootBtn.setOnClickListener(listener);
             flashBtn.setOnClickListener(listener);
-            storeImage.setOnClickListener(listener);
+           /* storeImage.setOnClickListener(listener);*/
         }
 
-        public void showImageStore(Bitmap image, int number) {
+       /* public void showImageStore(Bitmap image, int number) {
             if (null == image) {
                 storeLayout.setVisibility(View.INVISIBLE);
             } else {
@@ -117,7 +121,7 @@ public class CameraFragment extends ScanFragment {
 
                 storeLayout.setVisibility(View.VISIBLE);
             }
-        }
+        }*/
 
     }
 
@@ -142,9 +146,9 @@ public class CameraFragment extends ScanFragment {
                 }
                 break;
 
-            case R.id.camera_store_image:
+            /*case R.id.camera_store_image:
                 activityListener.onCameraFragmentInteraction();
-                break;
+                break;*/
         }
     }
 
@@ -268,11 +272,13 @@ public class CameraFragment extends ScanFragment {
 
     private void takePicture() {
         if (mCamera != null) {
-            openFlash();
+            //openFlash();
 
             // TODO: check taking photo one or many times at once
 
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            mCamera.takePicture(null, null, jpegCallback);
+
+            /*mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     try {
@@ -281,7 +287,7 @@ public class CameraFragment extends ScanFragment {
                         e.printStackTrace();
                     }
                 }
-            });
+            });*/
         }
         viewHolder.shootBtn.setEnabled(true);
     }

@@ -82,19 +82,24 @@ public class CameraActivity extends AppCompatActivity
 
     private void backAction() {
         if (getSupportFragmentManager().getFragments().size() > 1) {
-            ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
-            if (fragment instanceof ProcessFragment) {
-                PhotoStore.getInstance().deleteProcessing();
-                Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
-            }
+            try {
+                ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
+                if (fragment instanceof ProcessFragment) {
+                    PhotoStore.getInstance().deleteProcessing();
+                    Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
+                }
 
-            if(fragment instanceof CropFragment && isFromCamera){
-                goBackToCameraFragment(fragment);
-                isFromCamera = false;
-                return;
-            }
+                if(fragment instanceof CropFragment && isFromCamera){
+                    goBackToCameraFragment(fragment);
+                    isFromCamera = false;
+                    return;
+                }
 
-            this.onCloseFragmentInteraction(fragment);
+                this.onCloseFragmentInteraction(fragment);
+
+            }catch (ClassCastException e){
+                e.printStackTrace();
+            }
             return;
         }
 
@@ -149,7 +154,7 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onCloseFragmentInteraction(ScanFragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
+        //transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.remove(fragment);
         transaction.commit();
 
