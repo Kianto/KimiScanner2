@@ -58,7 +58,21 @@ public class StorageConnector {
         void onSuccess(List<String> folders);
     }
 
+    interface OnSyncDataListener{
+        void onUploadComplete(String msg, boolean isSuccess);
+        void onDownloadComplete(String msg, boolean isSuccess);
+    }
+
+    OnSyncDataListener syncListener;
+    private boolean isUploadSuccess = false;
+    private boolean isDownloadSucesss = false;
+
+    public void setSyncCallback(OnSyncDataListener listener){
+        this.syncListener = listener;
+    }
+
     public void upload(UserAccount account, FolderInfo folder) {
+        isUploadSuccess = true;
 
         StringBuilder folderRef = new StringBuilder(
                 account.getId()
@@ -71,6 +85,7 @@ public class StorageConnector {
             );
             uploadSingleFile(riversRef, filePath);
         }
+
     }
 
     private void uploadSingleFile(StorageReference riversRef, String filePath) {
@@ -86,6 +101,8 @@ public class StorageConnector {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
+                isUploadSuccess = false;
+
                 // File does not exist
                 if (exception instanceof StorageException &&
                         ((StorageException) exception).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND
@@ -128,6 +145,8 @@ public class StorageConnector {
                         for (StorageReference ref : listResult.getItems()) {
                             downloadSingleFile(ref, rootPath + folderName);
                         }
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -160,6 +179,7 @@ public class StorageConnector {
                         public void onFailure(@NonNull Exception exception) {
                             // Handle failed download
                             // ...
+                            isDownloadSucesss = false;
                         }
                     });
 

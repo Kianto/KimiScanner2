@@ -100,9 +100,9 @@ public class ProcessFragment extends ScanFragment {
         }
 
         public void showImage(Bitmap bitmap) {
-            Bitmap scale = resize(bitmap, 1920, 1920);
-            bitmap.recycle();
-            previewLayout.setImageDrawable(getBitmapDrawable(scale), previewLayout.getDisplayMatrix(), -1.0f, -1.0f);
+            /*Bitmap scale = resize(bitmap, 1920, 1920);
+            bitmap.recycle();*/
+            previewLayout.setImageDrawable(getBitmapDrawable(bitmap), previewLayout.getDisplayMatrix(), -1.0f, -1.0f);
            /* Glide.with(ProcessFragment.this)
                     .load(bitmap)
                     .into(previewLayout);*/
