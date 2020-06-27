@@ -7,21 +7,18 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.scanner.PhotoStore;
 import com.app.kimiscanner.scanner.ScanFragment;
-import com.app.kimiscanner.scanner.DeepDetector;
 import com.app.util.Corners;
-
-import org.opencv.core.Mat;
 
 import java.util.List;
 
@@ -34,8 +31,6 @@ public class CameraFragment extends ScanFragment {
     private ScanCamera scanCamera;
     private boolean isFlashOn = false;
 
-    private ProgressBar pbLoading;
-
     public CameraFragment() {
     }
 
@@ -47,9 +42,7 @@ public class CameraFragment extends ScanFragment {
         viewHolder.load(view);
 
         loadCamera(getContext(), viewHolder.previewLayout);
-        //loadImageStore();
-
-        PhotoStore.getInstance().clear();
+        loadImageStore();
 
         return view;
     }
@@ -70,37 +63,33 @@ public class CameraFragment extends ScanFragment {
         mCamera = getCameraInstance();
         resumePreview();
 
-        //loadImageStore();
-
-        PhotoStore.getInstance().clear();
+        loadImageStore();
     }
 
-   /* private void loadImageStore() {
+    private void loadImageStore() {
         if (PhotoStore.getInstance().hasPhoto()) {
             viewHolder.showImageStore(PhotoStore.getInstance().getProcessingBitmap(), PhotoStore.getInstance().size());
         } else {
             viewHolder.showImageStore(null, 0);
         }
-    }*/
+    }
 
     private class ViewHolder {
         ImageView shootBtn, flashBtn;
         RelativeLayout previewLayout;
         RelativeLayout previewHolder;
         RelativeLayout storeLayout;
-        /*ImageView storeImage;
-        TextView storeNumber;*/
+        ImageView storeImage;
+        TextView storeNumber;
 
         public void load(View view) {
             shootBtn = view.findViewById(R.id.camera_shoot);
             flashBtn = view.findViewById(R.id.camera_flash);
             previewLayout = view.findViewById(R.id.camera_preview_layout);
             previewHolder = view.findViewById(R.id.camera_preview_holder);
-           /* storeImage = view.findViewById(R.id.camera_store_image);
+            storeImage = view.findViewById(R.id.camera_store_image);
             storeNumber = view.findViewById(R.id.camera_store_number);
-            storeLayout = view.findViewById(R.id.camera_store_layout);*/
-
-            pbLoading = view.findViewById(R.id.pbLoading);
+            storeLayout = view.findViewById(R.id.camera_store_layout);
 
             setListener();
         }
@@ -109,10 +98,10 @@ public class CameraFragment extends ScanFragment {
             View.OnClickListener listener = getViewListener();
             shootBtn.setOnClickListener(listener);
             flashBtn.setOnClickListener(listener);
-           /* storeImage.setOnClickListener(listener);*/
+            storeImage.setOnClickListener(listener);
         }
 
-       /* public void showImageStore(Bitmap image, int number) {
+        public void showImageStore(Bitmap image, int number) {
             if (null == image) {
                 storeLayout.setVisibility(View.INVISIBLE);
             } else {
@@ -121,7 +110,7 @@ public class CameraFragment extends ScanFragment {
 
                 storeLayout.setVisibility(View.VISIBLE);
             }
-        }*/
+        }
 
     }
 
@@ -146,9 +135,9 @@ public class CameraFragment extends ScanFragment {
                 }
                 break;
 
-            /*case R.id.camera_store_image:
+            case R.id.camera_store_image:
                 activityListener.onCameraFragmentInteraction();
-                break;*/
+                break;
         }
     }
 
@@ -272,13 +261,11 @@ public class CameraFragment extends ScanFragment {
 
     private void takePicture() {
         if (mCamera != null) {
-            //openFlash();
+            openFlash();
 
             // TODO: check taking photo one or many times at once
 
-            mCamera.takePicture(null, null, jpegCallback);
-
-            /*mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     try {
@@ -287,7 +274,7 @@ public class CameraFragment extends ScanFragment {
                         e.printStackTrace();
                     }
                 }
-            });*/
+            });
         }
         viewHolder.shootBtn.setEnabled(true);
     }
@@ -328,36 +315,18 @@ public class CameraFragment extends ScanFragment {
                 nowBitmap = Bitmap.createBitmap(nowBitmap, 0, 0, nowBitmap.getWidth(), nowBitmap.getHeight(), matrix, true);
             }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pbLoading.setVisibility(View.VISIBLE);
-                }
-            });
-
             // Put extras
             Corners corners = mPreview.getDetectedCorners();
             if (null == corners) {
-                Mat orig = new Mat();
-                org.opencv.android.Utils.bitmapToMat(nowBitmap, orig);
-                corners = new Corners(DeepDetector.getEdgePoints(orig), orig.size());
+                corners = new Corners(null, null);
             }
-
             corners.layoutHeight = viewHolder.previewHolder.getHeight();
             corners.layoutWidth = viewHolder.previewHolder.getWidth();
 
             PhotoStore.getInstance().addBitmap(nowBitmap);
             PhotoStore.getInstance().addCorners(corners);
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pbLoading.setVisibility(View.GONE);
-                }
-            });
-
-            //activityListener.onCameraFragmentInteraction();
-            activityListener.onProcessFragmentInteraction(true);
+            activityListener.onCameraFragmentInteraction();
         }).start();
     }
 

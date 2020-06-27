@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scanner.ProcessFragment">
+    tools:context=".scanner.ProcessFragment"
+    tools:showIn="@layout/activity_camera">
 
     <RelativeLayout
         android:id="@+id/process_layout"
@@ -31,8 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="32dp"
             android:layout_marginBottom="32dp"
-            android:src="@drawable/ic_add"
-            android:visibility="gone"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+            android:src="@drawable/ic_add"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
     </RelativeLayout>
 
@@ -48,11 +48,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="matrix" />
-        <!--<ImageView
-            android:id="@+id/process_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"></ImageView>-->
 
     </RelativeLayout>
 

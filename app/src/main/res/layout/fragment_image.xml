@@ -27,8 +27,7 @@
             android:background="@color/colorPrimaryLight"
             android:textColor="@color/colorStoreNumber"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:visibility="gone"/>
+            android:layout_alignParentStart="true" />
 
 
 

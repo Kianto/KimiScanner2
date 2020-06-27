@@ -49,13 +49,6 @@ public class GalleryActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        //onProcessFragmentInteraction(false);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
@@ -114,7 +107,7 @@ public class GalleryActivity extends AppCompatActivity
     }
 
     @Override
-    public void onProcessFragmentInteraction(boolean isFromCamera) {
+    public void onProcessFragmentInteraction() {
         mCropFragment = new CropFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);

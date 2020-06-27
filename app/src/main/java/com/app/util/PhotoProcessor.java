@@ -2,7 +2,6 @@ package com.app.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
@@ -25,8 +24,6 @@ public class PhotoProcessor {
         this.corners = corners;
 
         this.croppedImage = cropBitmap(source, corners.cornersToArray());
-
-        Log.e("adf", "Adf");
     }
 
     public Bitmap getOriginal() {

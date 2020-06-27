@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scanner.ProcessFragment">
+    tools:context=".scanner.ProcessFragment"
+    tools:showIn="@layout/activity_camera">
 
     <ProgressBar
         android:id="@+id/crop_loading"

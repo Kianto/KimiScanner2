@@ -17,7 +17,6 @@ import com.app.util.Corners;
 import com.app.util.FileHelper;
 import com.app.util.PhotoProcessor;
 import com.app.widget.LoadingRunner;
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -68,7 +67,6 @@ public class ProcessFragment extends ScanFragment {
         ImageView addBtn, doneBtn,
                 deleteBtn, rotateBtn, cropBtn,
                 blackwhiteBtn, grayscaleBtn, colorBtn;
-        //ImageView previewLayout;
         ImageViewTouch previewLayout;
         ProgressBar loadingBar;
 
@@ -100,33 +98,8 @@ public class ProcessFragment extends ScanFragment {
         }
 
         public void showImage(Bitmap bitmap) {
-            /*Bitmap scale = resize(bitmap, 1920, 1920);
-            bitmap.recycle();*/
             previewLayout.setImageDrawable(getBitmapDrawable(bitmap), previewLayout.getDisplayMatrix(), -1.0f, -1.0f);
-           /* Glide.with(ProcessFragment.this)
-                    .load(bitmap)
-                    .into(previewLayout);*/
         }
-
-        private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
-            if (maxHeight > 0 && maxWidth > 0) {
-                int width = image.getWidth();
-                int height = image.getHeight();
-                float ratioBitmap = (float) width / (float) height;
-                float ratioMax = (float) maxWidth / (float) maxHeight;
-
-                int finalWidth = maxWidth;
-                int finalHeight = maxHeight;
-                if (ratioMax > ratioBitmap) {
-                    finalWidth = (int) ((float)maxHeight * ratioBitmap);
-                } else {
-                    finalHeight = (int) ((float)maxWidth / ratioBitmap);
-                }
-                image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-            }
-            return image;
-        }
-
 
         private BitmapDrawable getBitmapDrawable(Bitmap bitmap) {
             return new BitmapDrawable(getResources(), bitmap);
@@ -163,7 +136,7 @@ public class ProcessFragment extends ScanFragment {
                 break;
 
             case R.id.process_crop:
-                activityListener.onProcessFragmentInteraction(false);
+                activityListener.onProcessFragmentInteraction();
                 break;
 
             case R.id.process_delete:

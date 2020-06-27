@@ -24,6 +24,7 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
     final static String DELETE_FOLDER_CODE = "delete-folder";
 
     public FolderActivity() {
+        super();
         setPresenter(new FolderPresenter(this));
     }
 
@@ -41,8 +42,7 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> /*sharePDF()*/
-        sendPhoto());
+        fab.setOnClickListener(view -> sharePDF());
     }
 
     @Override
@@ -124,10 +124,6 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
 
     private void sharePDF() {
         presenter.process(SHARE_IMAGE_CODE, FolderStore.getInstance().convertPDF());
-    }
-
-    private void sendPhoto(){
-        presenter.process(SHARE_IMAGE_CODE, FolderStore.getInstance().folder.filePaths.get(0));
     }
 
 

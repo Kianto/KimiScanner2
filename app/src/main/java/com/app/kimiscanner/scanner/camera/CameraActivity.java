@@ -30,8 +30,6 @@ public class CameraActivity extends AppCompatActivity
 
     private PermissionHelper permissionHelper = new PermissionHelper(this);
 
-    private boolean isFromCamera = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,24 +80,12 @@ public class CameraActivity extends AppCompatActivity
 
     private void backAction() {
         if (getSupportFragmentManager().getFragments().size() > 1) {
-            try {
-                ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
-                if (fragment instanceof ProcessFragment) {
-                    PhotoStore.getInstance().deleteProcessing();
-                    Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
-                }
-
-                if(fragment instanceof CropFragment && isFromCamera){
-                    goBackToCameraFragment(fragment);
-                    isFromCamera = false;
-                    return;
-                }
-
-                this.onCloseFragmentInteraction(fragment);
-
-            }catch (ClassCastException e){
-                e.printStackTrace();
+            ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
+            if (fragment instanceof ProcessFragment) {
+                PhotoStore.getInstance().deleteProcessing();
+                Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
             }
+            this.onCloseFragmentInteraction(fragment);
             return;
         }
 
@@ -121,16 +107,6 @@ public class CameraActivity extends AppCompatActivity
         closingDialog.show();
     }
 
-    private void goBackToCameraFragment(ScanFragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.remove(fragment);
-        transaction.commit();
-
-        FragmentManager manager = getSupportFragmentManager();
-        ((CameraFragment)manager.getFragments().get(0)).reset();
-    }
-
     // <@== IFragmentInteractionListener ==@>
     @Override
     public void onCameraFragmentInteraction() {
@@ -142,8 +118,7 @@ public class CameraActivity extends AppCompatActivity
     }
 
     @Override
-    public void onProcessFragmentInteraction(boolean isFromCamera) {
-        this.isFromCamera = isFromCamera;
+    public void onProcessFragmentInteraction() {
         Fragment fragment = new CropFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
@@ -154,7 +129,7 @@ public class CameraActivity extends AppCompatActivity
     @Override
     public void onCloseFragmentInteraction(ScanFragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.remove(fragment);
         transaction.commit();
 
@@ -162,12 +137,10 @@ public class CameraActivity extends AppCompatActivity
             FragmentManager manager = getSupportFragmentManager();
             ((CameraFragment)manager.getFragments().get(0)).reset();
         }
-
         if (fragment instanceof CropFragment) {
             this.onCameraFragmentInteraction();
         }
 
-        isFromCamera = false;
     }
 
     @Override

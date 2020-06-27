@@ -32,6 +32,7 @@ public class AccountActivity extends BaseView.BaseActivity implements AccountFra
     private SyncDataFragment mSyncDataFragment;
 
     public AccountActivity() {
+        super();
         setPresenter(new AccountPresenter(this));
     }
 

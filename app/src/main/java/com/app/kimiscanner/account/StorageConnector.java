@@ -58,21 +58,9 @@ public class StorageConnector {
         void onSuccess(List<String> folders);
     }
 
-    interface OnSyncDataListener{
-        void onUploadComplete(String msg, boolean isSuccess);
-        void onDownloadComplete(String msg, boolean isSuccess);
-    }
-
-    OnSyncDataListener syncListener;
-    private boolean isUploadSuccess = false;
-    private boolean isDownloadSucesss = false;
-
-    public void setSyncCallback(OnSyncDataListener listener){
-        this.syncListener = listener;
-    }
-
     public void upload(UserAccount account, FolderInfo folder) {
-        isUploadSuccess = true;
+        //___ Open progress plan ___\\
+        DataTransferManager.getInstance().addProgress(folder.folderName, folder.folderName, folder.pageNumber, true);
 
         StringBuilder folderRef = new StringBuilder(
                 account.getId()
@@ -83,12 +71,11 @@ public class StorageConnector {
             StorageReference riversRef = mStorageRef.child(
                     folderRef.toString() + "/" + new File(filePath).getName()
             );
-            uploadSingleFile(riversRef, filePath);
+            uploadSingleFile(folder.folderName, riversRef, filePath);
         }
-
     }
 
-    private void uploadSingleFile(StorageReference riversRef, String filePath) {
+    private void uploadSingleFile(String folderId, StorageReference riversRef, String filePath) {
         Uri file = Uri.fromFile(new File(filePath));
 
         // Check file existence before upload
@@ -101,8 +88,6 @@ public class StorageConnector {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                isUploadSuccess = false;
-
                 // File does not exist
                 if (exception instanceof StorageException &&
                         ((StorageException) exception).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND
@@ -113,6 +98,9 @@ public class StorageConnector {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                     // ...
+
+                                    //___ Update progress plan success ___\\
+                                    DataTransferManager.getInstance().updateProgress(folderId, 1);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -120,8 +108,14 @@ public class StorageConnector {
                                 public void onFailure(@NonNull Exception exception) {
                                     // Handle unsuccessful uploads
                                     // ...
+
+                                    //___ Update progress plan fail ___\\
+                                    DataTransferManager.getInstance().updateProgress(folderId, -1612315);
                                 }
                             });
+                } else {
+                    //___ Update progress plan fail ___\\
+                    DataTransferManager.getInstance().updateProgress(folderId, -1612315);
                 }
             }
         });
@@ -130,7 +124,6 @@ public class StorageConnector {
 
 
     public void download(UserAccount account, String folderName, String rootPath) {
-
         // create folder if it does not exist
         File folder = new File(rootPath + folderName);
         if (!folder.exists()) folder.mkdirs();
@@ -142,11 +135,12 @@ public class StorageConnector {
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
+                        //___ Open progress plan ___\\
+                        DataTransferManager.getInstance().addProgress(folderName, folderName, listResult.getItems().size(), false);
+
                         for (StorageReference ref : listResult.getItems()) {
-                            downloadSingleFile(ref, rootPath + folderName);
+                            downloadSingleFile(folderName, ref, rootPath + folderName);
                         }
-
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -157,7 +151,7 @@ public class StorageConnector {
                 });
     }
 
-    private void downloadSingleFile(StorageReference riversRef, String fullSavePath) {
+    private void downloadSingleFile(String folderId, StorageReference riversRef, String fullSavePath) {
         try {
             String preNameFile = riversRef.getName().substring(0, riversRef.getName().indexOf('.'));
             File localFile = File.createTempFile(
@@ -172,6 +166,9 @@ public class StorageConnector {
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             // Successfully downloaded data to local file
                             // ...
+
+                            //___ Update progress plan success ___\\
+                            DataTransferManager.getInstance().updateProgress(folderId, 1);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -179,12 +176,16 @@ public class StorageConnector {
                         public void onFailure(@NonNull Exception exception) {
                             // Handle failed download
                             // ...
-                            isDownloadSucesss = false;
+
+                            //___ Update progress plan fail ___\\
+                            DataTransferManager.getInstance().updateProgress(folderId, -1612315);
                         }
                     });
 
         } catch (IOException e) {
             e.printStackTrace();
+            //___ Update progress plan fail ___\\
+            DataTransferManager.getInstance().updateProgress(folderId, -1612315);
         }
     }
 
