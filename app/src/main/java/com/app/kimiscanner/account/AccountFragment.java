@@ -32,7 +32,7 @@ public class AccountFragment extends Fragment {
 //        viewHolder = new ViewHolder();
 //        viewHolder.load(view);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getChildFragmentManager(), this);
+        SectionsAuthPagerAdapter sectionsPagerAdapter = new SectionsAuthPagerAdapter(getContext(), getChildFragmentManager(), this);
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
 

@@ -87,6 +87,8 @@ public class ListFileDialog extends Dialog {
                         }
                     }
                     callback.onSucceed(folderPaths.toArray());
+                    Toast.makeText(context, R.string.processing, Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 })
                 .setNegativeButton(context.getString(R.string.action_cancel), (dialog, which) -> dialog.dismiss())
                 .create()

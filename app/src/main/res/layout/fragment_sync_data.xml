@@ -8,6 +8,7 @@
     android:background="@color/colorWhite">
 
     <LinearLayout
+        android:id="@+id/acc_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -46,64 +47,51 @@
                 android:id="@+id/acc_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_toEndOf="@id/auth_username_icon"
+                android:layout_toStartOf="@+id/auth_logout"
                 android:enabled="false"
                 android:paddingTop="13dp"
                 android:textColor="#4b4b4b"
                 android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/auth_logout"
+                android:layout_width="46dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/acc_email"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:paddingStart="12dp"
+                android:background="@drawable/button_shape"
+                android:drawableStart="@drawable/ic_logout" />
+
+            <!--            android:hint="Logout"-->
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/auth_logout"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:background="@drawable/button_shape"
-            android:paddingStart="@dimen/image_button"
-            android:paddingEnd="@dimen/image_button"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textColor="@color/colorImageButton" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/acc_sync_layout"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabSelectedTextColor="@color/colorWhite"
+        android:layout_below="@id/acc_info_layout"
+        android:background="?attr/colorPrimary" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/tabs"
+        android:layout_alignStart="@id/tabs"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/text_margin"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/acc_backup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/button_shape"
-            android:paddingStart="@dimen/image_button"
-            android:paddingEnd="@dimen/image_button"
-            android:text="Backup now"
-            android:textAllCaps="false"
-            android:textColor="@color/colorImageButton" />
-
-        <Button
-            android:id="@+id/acc_restore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/inner_text_margin"
-            android:background="@drawable/button_shape"
-            android:paddingStart="@dimen/image_button"
-            android:paddingEnd="@dimen/image_button"
-            android:text="Restore"
-            android:textAllCaps="false"
-            android:textColor="@color/colorImageButton" />
-
-    </LinearLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </RelativeLayout>

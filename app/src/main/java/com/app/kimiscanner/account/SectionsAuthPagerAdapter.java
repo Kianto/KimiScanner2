@@ -17,14 +17,14 @@ import com.app.kimiscanner.account.authview.RegisterFragment;
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsAuthPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,  R.string.tab_text_3};
     private final Context mContext;
     private final AccountFragment mFatherFragment;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, AccountFragment fatherFragment) {
+    public SectionsAuthPagerAdapter(Context context, FragmentManager fm, AccountFragment fatherFragment) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
         mFatherFragment = fatherFragment;

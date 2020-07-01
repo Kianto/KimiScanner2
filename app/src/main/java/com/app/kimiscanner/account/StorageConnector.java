@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.app.kimiscanner.model.FolderInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -40,9 +41,12 @@ public class StorageConnector {
         riversRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-                List<String> folders = new ArrayList<>();
+                List<CloudFolderInfo> folders = new ArrayList<>();
                 for (StorageReference ref : listResult.getPrefixes()) {
-                    folders.add(ref.getName());
+                    CloudFolderInfo cloudFolder = new CloudFolderInfo();
+                    cloudFolder.folderRef = ref;
+                    cloudFolder.folderName = ref.getName();
+                    folders.add(cloudFolder);
                 }
                 listener.onSuccess(folders);
             }
@@ -54,8 +58,38 @@ public class StorageConnector {
         });
     }
 
-    interface OnListSuccessListener {
-        void onSuccess(List<String> folders);
+    public interface OnListSuccessListener {
+        void onSuccess(List<CloudFolderInfo> folders);
+    }
+
+    public interface OnImageListSuccessListener {
+        void onSuccess(CloudFolderInfo folder);
+    }
+
+    public void getImageList(CloudFolderInfo cloudFolder, OnImageListSuccessListener listener) {
+
+        cloudFolder.folderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+                cloudFolder.pageNumber = listResult.getItems().size();
+                cloudFolder.imageLinks = new ArrayList<>();
+                cloudFolder.imageRefs = new ArrayList<>();
+
+                cloudFolder.imageRefs.addAll(listResult.getItems());
+                listener.onSuccess(cloudFolder);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void getImage(StorageReference imageRef, OnSuccessListener<Uri> listener, OnFailureListener failureListener) {
+        imageRef.getDownloadUrl()
+                .addOnSuccessListener(listener)
+                .addOnFailureListener(failureListener);
     }
 
     public void upload(UserAccount account, FolderInfo folder) {

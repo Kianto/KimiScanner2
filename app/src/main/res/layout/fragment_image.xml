@@ -8,6 +8,12 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
 
+        <ProgressBar
+            android:id="@+id/file_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
         <ImageView
             android:id="@+id/file_image"
             android:layout_width="match_parent"

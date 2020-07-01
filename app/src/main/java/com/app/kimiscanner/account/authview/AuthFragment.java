@@ -15,7 +15,7 @@ import com.app.kimiscanner.account.AccountFragment;
 import com.google.android.gms.common.SignInButton;
 
 public abstract class AuthFragment extends Fragment {
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_SECTION_NUMBER = "section_auth_number";
 
     protected AccountFragment mFatherFragment;
 
