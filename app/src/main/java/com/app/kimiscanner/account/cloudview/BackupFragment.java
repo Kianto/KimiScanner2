@@ -5,8 +5,9 @@ import android.widget.ProgressBar;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.kimiscanner.account.CloudFolderInfo;
+import com.app.kimiscanner.account.StorageConnector;
 import com.app.kimiscanner.account.SyncDataFragment;
-import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.widget.LoadingRunner;
 
@@ -26,24 +27,21 @@ public class BackupFragment extends SyncFragment {
 
     @Override
     protected void setUpList(RecyclerView listLayout, ProgressBar progressBar) {
-        LoadingRunner runner = new ListLoadingTask(progressBar, list -> {
-            if (null != list)
-                listLayout.setAdapter(new BackupFolderAdapter((List<FolderInfo>) list, mListener));
+        // Get cloud folders
+        mListener.onGetListInteraction(new StorageConnector.OnListSuccessListener() {
+            @Override
+            public void onSuccess(List<CloudFolderInfo> folders) {
+                // Get local folders
+                LoadingRunner runner = new ListLocalLoadingTask(progressBar, list -> {
+                    if (null != list)
+                        listLayout.setAdapter(new BackupFolderAdapter((List<FolderInfo>) list, folders, mListener));
+                });
+                runner.execute();
+            }
         });
-        runner.execute();
     }
 
-    private static class ListLoadingTask extends LoadingRunner {
-        ListLoadingTask(ProgressBar progressBar, LoadingRunner.LoadingCallback callback) {
-            super(progressBar, callback);
-        }
 
-        @Override
-        protected void doInBackground() {
-            returnValue = FolderCollector.getLocalFolders();
-        }
-
-    } // end class ListLoadingTask
 
 
 }

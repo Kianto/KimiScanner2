@@ -17,15 +17,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.app.kimiscanner.LocalPath;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.cloudview.SyncFragment;
-import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.model.FolderInfoChecker;
-import com.app.widget.dialog.Dialog;
-import com.app.widget.dialog.ListFileDialog;
 import com.app.widget.dialog.ListImageDialog;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SyncDataFragment extends Fragment implements SyncFragment.OnListFragmentInteractionListener {

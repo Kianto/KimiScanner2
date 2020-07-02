@@ -1,5 +1,6 @@
 package com.app.kimiscanner.account.cloudview;
 
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.kimiscanner.R;
@@ -26,10 +28,17 @@ import java.util.List;
 public class RestoreFolderAdapter extends RecyclerView.Adapter<RestoreFolderAdapter.ViewHolder>  {
 
     protected final List<CloudFolderInfo> mValues;
+    protected final List<FolderInfo> mExamples;
     protected final SyncFragment.OnListFragmentInteractionListener mListener;
+    final int FADE_COLOR = 0xA3303030;
 
-    public RestoreFolderAdapter(List<CloudFolderInfo> items, SyncFragment.OnListFragmentInteractionListener listener) {
+    public RestoreFolderAdapter(
+            List<CloudFolderInfo> items,
+            List<FolderInfo> examples,
+            SyncFragment.OnListFragmentInteractionListener listener
+    ) {
         mValues = items;
+        mExamples = examples;
         mListener = listener;
     }
 
@@ -43,13 +52,12 @@ public class RestoreFolderAdapter extends RecyclerView.Adapter<RestoreFolderAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.setItemView(mValues.get(position));
-
         holder.mView.setOnClickListener(view -> {
             if (null != mListener) {
                 mListener.onListFragmentInteraction(holder.folderInfo);
             }
         });
+        holder.setItemView(mValues.get(position));
     }
 
     @Override
@@ -64,6 +72,7 @@ public class RestoreFolderAdapter extends RecyclerView.Adapter<RestoreFolderAdap
         public final ProgressBar mProgressBar;
         public final TextView mName;
         public final TextView mPage;
+        public final CardView mCardView;
         public CloudFolderInfo folderInfo;
 
         public ViewHolder(View view) {
@@ -74,6 +83,7 @@ public class RestoreFolderAdapter extends RecyclerView.Adapter<RestoreFolderAdap
             mProgressBar = (ProgressBar)view.findViewById(R.id.item_cloud_loading);
             mName = (TextView) view.findViewById(R.id.item_name);
             mPage = (TextView) view.findViewById(R.id.item_page);
+            mCardView = view.findViewById(R.id.item_card);
         }
 
         public void setItemView(CloudFolderInfo cloudFolderInfo) {
@@ -109,17 +119,29 @@ public class RestoreFolderAdapter extends RecyclerView.Adapter<RestoreFolderAdap
             });
 
             mAction.setBackgroundResource(R.drawable.button_shape);
-            mAction.setImageResource(R.drawable.ic_cloud_download);
-            mAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onListFragmentInteractionRestore(folderInfo);
-                }
-            });
+            if (checkExist(folderInfo, mExamples)) {
+                mAction.setImageResource(R.drawable.ic_cloud_off);
+                mCardView.setForeground(new ColorDrawable(FADE_COLOR));
+                mView.setOnClickListener(null);
+            } else /* allow backup action */{
+                mAction.setImageResource(R.drawable.ic_cloud_download);
+                mAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onListFragmentInteractionRestore(folderInfo);
+                    }
+                });
+            }
         }
 
     }
 
-
+    boolean checkExist(CloudFolderInfo cloudFolder, List<FolderInfo> folderList) {
+        for (FolderInfo folder : folderList) {
+            if (cloudFolder.folderName.equals(folder.folderName))
+                return true;
+        }
+        return false;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.app.kimiscanner.account.cloudview;
 
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.kimiscanner.R;
+import com.app.kimiscanner.account.CloudFolderInfo;
 import com.app.kimiscanner.model.FolderInfo;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,10 +24,17 @@ import java.util.List;
 public class BackupFolderAdapter extends RecyclerView.Adapter<BackupFolderAdapter.ViewHolder>  {
 
     protected final List<FolderInfo> mValues;
+    protected final List<CloudFolderInfo> mExamples;
     protected final SyncFragment.OnListFragmentInteractionListener mListener;
+    final int FADE_COLOR = 0xA3303030;
 
-    public BackupFolderAdapter(List<FolderInfo> items, SyncFragment.OnListFragmentInteractionListener listener) {
+    public BackupFolderAdapter(
+            List<FolderInfo> items,
+            List<CloudFolderInfo> examples,
+            SyncFragment.OnListFragmentInteractionListener listener
+    ) {
         mValues = items;
+        mExamples = examples;
         mListener = listener;
     }
 
@@ -38,13 +48,12 @@ public class BackupFolderAdapter extends RecyclerView.Adapter<BackupFolderAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.setItemView(mValues.get(position));
-
         holder.mView.setOnClickListener(view -> {
             if (null != mListener) {
                 mListener.onListFragmentInteraction(holder.folderInfo);
             }
         });
+        holder.setItemView(mValues.get(position));
     }
 
     @Override
@@ -59,6 +68,7 @@ public class BackupFolderAdapter extends RecyclerView.Adapter<BackupFolderAdapte
         public final ProgressBar mProgressBar;
         public final TextView mName;
         public final TextView mPage;
+        public final CardView mCardView;
         public FolderInfo folderInfo;
 
         public ViewHolder(View view) {
@@ -69,6 +79,7 @@ public class BackupFolderAdapter extends RecyclerView.Adapter<BackupFolderAdapte
             mProgressBar = (ProgressBar)view.findViewById(R.id.item_cloud_loading);
             mName = (TextView) view.findViewById(R.id.item_name);
             mPage = (TextView) view.findViewById(R.id.item_page);
+            mCardView = view.findViewById(R.id.item_card);
         }
 
         public void setItemView(FolderInfo folderInfo) {
@@ -85,17 +96,29 @@ public class BackupFolderAdapter extends RecyclerView.Adapter<BackupFolderAdapte
             mProgressBar.setVisibility(View.GONE);
 
             mAction.setBackgroundResource(R.drawable.button_shape);
-            mAction.setImageResource(R.drawable.ic_cloud_upload);
-            mAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onListFragmentInteractionBackup(folderInfo);
-                }
-            });
+            if (checkExist(folderInfo, mExamples)) {
+                mAction.setImageResource(R.drawable.ic_cloud_off);
+                mCardView.setForeground(new ColorDrawable(FADE_COLOR));
+                mView.setOnClickListener(null);
+            } else /* allow backup action */{
+                mAction.setImageResource(R.drawable.ic_cloud_upload);
+                mAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onListFragmentInteractionBackup(folderInfo);
+                    }
+                });
+            }
         }
 
     }
 
-
+    boolean checkExist(FolderInfo folder, List<CloudFolderInfo> cFolderList) {
+        for (CloudFolderInfo cFolder : cFolderList) {
+            if (folder.folderName.equals(cFolder.folderName))
+                return true;
+        }
+        return false;
+    }
 
 }

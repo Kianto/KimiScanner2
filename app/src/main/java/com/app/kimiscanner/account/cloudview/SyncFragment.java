@@ -2,7 +2,6 @@ package com.app.kimiscanner.account.cloudview;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +12,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.kimiscanner.LocalPath;
 import com.app.kimiscanner.R;
-import com.app.kimiscanner.account.AccountFragment;
+import com.app.kimiscanner.account.DataTransferManager;
 import com.app.kimiscanner.account.StorageConnector;
 import com.app.kimiscanner.account.SyncDataFragment;
-import com.app.kimiscanner.account.UserAccount;
 import com.app.kimiscanner.account.CloudFolderInfo;
-import com.app.kimiscanner.account.authview.AuthFragment;
-import com.app.kimiscanner.folder.FolderFragment;
+import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.widget.LoadingRunner;
 
-public abstract class SyncFragment extends Fragment {
+public abstract class SyncFragment extends Fragment implements DataTransferManager.DataListener {
     private static final String ARG_SECTION_NUMBER = "section_sync_number";
 
     private final SyncDataFragment mFatherFragment;
     protected OnListFragmentInteractionListener mListener;
 
-    private RecyclerView listLayout;
     private static final int GRID_COLUMN = 2;
+    private RecyclerView listLayout;
+    private ProgressBar progressBar;
 
     protected SyncFragment(SyncDataFragment fatherFragment) {
         mFatherFragment = fatherFragment;
+        DataTransferManager.getInstance().registerListen(this);
     }
 
     protected static void setInstance(SyncFragment fragment, int index) {
@@ -72,7 +71,7 @@ public abstract class SyncFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_sync_tab, container, false);
 
         listLayout = root.findViewById(R.id.list);
-        ProgressBar progressBar = root.findViewById(R.id.cloud_loading);
+        progressBar = root.findViewById(R.id.cloud_loading);
         setListManager();
         setUpList(listLayout, progressBar);
 
@@ -86,6 +85,18 @@ public abstract class SyncFragment extends Fragment {
 
     protected abstract void setUpList(RecyclerView listLayout, ProgressBar progressBar);
 
+    // ListLocalLoadingTask for get local folder list
+    protected static class ListLocalLoadingTask extends LoadingRunner {
+        ListLocalLoadingTask(ProgressBar progressBar, LoadingRunner.LoadingCallback callback) {
+            super(progressBar, callback);
+        }
+
+        @Override
+        protected void doInBackground() {
+            returnValue = FolderCollector.getLocalFolders();
+        }
+
+    } // end class ListLocalLoadingTask
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteractionBackup(FolderInfo item);
@@ -97,4 +108,18 @@ public abstract class SyncFragment extends Fragment {
         void onGetListInteraction(StorageConnector.OnListSuccessListener callback);
     }
 
+    // === Data Listener === //
+    @Override
+    public void onUpdateProgress(String folderName, String action, double percent) {
+
+    }
+    @Override
+    public void onDone(String folderName, String action) {
+        setUpList(listLayout, progressBar);
+    }
+    @Override
+    public void onFail(String folderName, String action) {
+
+    }
+    // === Data Listener === //
 }
