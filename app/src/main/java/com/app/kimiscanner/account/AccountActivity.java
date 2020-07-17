@@ -11,10 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 
 import java.util.Arrays;
 
@@ -46,7 +46,7 @@ public class AccountActivity extends BaseView.BaseActivity implements AccountFra
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Backup and Restore");
+            actionBar.setTitle(LanguageManager.getInstance().getString(R.string.title_backup_a_restore));
         }
 
         presenter.setUp(toolbar);

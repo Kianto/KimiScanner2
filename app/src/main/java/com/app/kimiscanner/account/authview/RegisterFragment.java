@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.AccountFragment;
+import com.app.util.LanguageManager;
 
 
 public class RegisterFragment extends AuthFragment {
@@ -40,12 +41,12 @@ public class RegisterFragment extends AuthFragment {
                 String repassword = repasswordEdt.getText().toString();
 
                 if (!email.contains("@") || !email.contains(".") || password.length() < 6) {
-                    Toast.makeText(getContext(), "Invalid account!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.auth_invalid), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (!password.equals(repassword)) {
-                    Toast.makeText(getContext(), "Repassword does not match password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.auth_repass_wrond), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

@@ -30,7 +30,7 @@
             android:layout_margin="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Name"
+            android:text="@string/file_name"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:maxLines="1"
-            android:text="Page"
+            android:text="@string/page"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/list_check_folder_check"
             app:layout_constraintTop_toBottomOf="@id/list_check_folder_name" />

@@ -11,6 +11,7 @@ import com.app.kimiscanner.scanner.CropFragment;
 import com.app.kimiscanner.scanner.PhotoStore;
 import com.app.kimiscanner.scanner.ProcessFragment;
 import com.app.kimiscanner.scanner.ScanFragment;
+import com.app.util.LanguageManager;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
 
@@ -40,6 +41,7 @@ public class CameraActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(LanguageManager.getInstance().getString(R.string.title_activity_camera));
         }
 
         if (!permissionHelper.hasAllPermissionGranted()) {
@@ -83,7 +85,7 @@ public class CameraActivity extends AppCompatActivity
             ScanFragment fragment = (ScanFragment) getSupportFragmentManager().getFragments().get(1);
             if (fragment instanceof ProcessFragment) {
                 PhotoStore.getInstance().deleteProcessing();
-                Toast.makeText(this, R.string.action_cancel_process, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, LanguageManager.getInstance().getString(R.string.action_cancel_process), Toast.LENGTH_SHORT).show();
             }
             this.onCloseFragmentInteraction(fragment);
             return;
@@ -101,9 +103,9 @@ public class CameraActivity extends AppCompatActivity
             }
         });
         if (PhotoStore.getInstance().hasPhoto())
-            closingDialog.setWarningId(R.string.action_close_captured_camera);
+            closingDialog.setWarning(LanguageManager.getInstance().getString(R.string.action_close_captured_camera));
         else
-            closingDialog.setWarningId(R.string.action_close_camera);
+            closingDialog.setWarning(LanguageManager.getInstance().getString(R.string.action_close_camera));
         closingDialog.show();
     }
 

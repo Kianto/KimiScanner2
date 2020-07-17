@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.app.kimiscanner.BasePresenter;
 import com.app.kimiscanner.BaseView;
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -119,7 +120,7 @@ public class AccountPresenter extends BasePresenter {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Snackbar.make(view, "Authentication Failed!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, LanguageManager.getInstance().getString(R.string.auth_failed), Snackbar.LENGTH_SHORT).show();
                         }
                         // ...
                     }
@@ -139,7 +140,7 @@ public class AccountPresenter extends BasePresenter {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Snackbar.make(view, "Register Failed!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, LanguageManager.getInstance().getString(R.string.register_failed), Snackbar.LENGTH_SHORT).show();
                         }
                         // ...
                     }
@@ -155,7 +156,7 @@ public class AccountPresenter extends BasePresenter {
                             Log.d(TAG, "Email sent.");
                             Snackbar.make(view, "Message sent. Please check your email!", Snackbar.LENGTH_SHORT).show();
                         } else {
-                            Snackbar.make(view, "Reset Password Failed!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, LanguageManager.getInstance().getString(R.string.reset_failed), Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -192,7 +193,7 @@ public class AccountPresenter extends BasePresenter {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, LanguageManager.getInstance().getString(R.string.auth_failed), Snackbar.LENGTH_SHORT).show();
                         }
                         // ...
                     }

@@ -13,6 +13,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.app.util.LanguageManager;
+
 public class PermissionHelper {
     public static final int REQUEST_CODE_PERMISSION = 300;
 
@@ -33,15 +35,15 @@ public class PermissionHelper {
 
     private void showCancelPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.dialog_are_you_sure);
+        builder.setMessage(LanguageManager.getInstance().getString(R.string.dialog_are_you_sure));
 
-        builder.setNegativeButton(R.string.dialog_deny, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(LanguageManager.getInstance().getString(R.string.dialog_deny), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 activity.finish();
             }
         });
 
-        builder.setPositiveButton(R.string.dialog_try_again, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(LanguageManager.getInstance().getString(R.string.dialog_try_again), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 requestPermission();
             }
@@ -55,16 +57,16 @@ public class PermissionHelper {
 
     private void showMissingPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.dialog_help_text);
+        builder.setMessage(LanguageManager.getInstance().getString(R.string.dialog_help_text));
 
-        builder.setNegativeButton(R.string.dialog_not_now, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(LanguageManager.getInstance().getString(R.string.dialog_not_now), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 activity.finish();
             }
         });
 
-        builder.setPositiveButton(R.string.dialog_goto_settings, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(LanguageManager.getInstance().getString(R.string.dialog_goto_settings), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");

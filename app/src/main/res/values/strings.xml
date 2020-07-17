@@ -2,23 +2,12 @@
     <string name="app_name">KimiScanner</string>
     <string name="action_gallery">Gallery</string>
     <string name="action_sync_data">Sync Data</string>
+    <string name="action_english">English</string>
+    <string name="action_vietnamese">Vietnamese</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_camera">Scanner</string>
     <string name="title_activity_setting">Settings</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_backup_a_restore">Backup and Restore</string>
 
     <!-- Permission Dialogs -->
     <string name="dialog_are_you_sure">Are you sure? You won\'t be able to use KimiScanner if you deny permission.</string>
@@ -39,18 +28,20 @@
     <string name="dialog_delete_folder">Are you sure delete this folder?</string>
     <string name="action_close_camera">Do you want to close camera?</string>
     <string name="action_close_captured_camera">Are you sure delete all captured pictures and close camera?</string>
+    <string name="action_close_gallery">Do you want to close gallery?</string>
+    <string name="action_close_review_gallery">Are you sure delete all selected pictures and close gallery?</string>
     <string name="action_cancel_process">Process is canceled</string>
     <string name="action_remove">Remove</string>
 
-    <string name="title_activity_folder">FolderActivity</string>
-    <string name="title_activity_account">UserActivity</string>
+    <string name="title_activity_folder">Folder</string>
+    <string name="title_activity_account">User</string>
     <string name="general">Account</string>
     <string name="username">Username</string>
-    <string name="password">******</string>
-    <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="password" translatable="false">******</string>
+    <string name="title_activity_gallery">Gallery</string>
     <string name="action_select_folder">Select Folder</string>
     <string name="sync_select_all"><u>Select all</u></string>
-    <string name="title_activity_sync_data">SyncDataActivity</string>
+    <string name="title_activity_sync_data">Sync Data</string>
     <string name="tab_text_1">Login</string>
     <string name="tab_text_2">Register</string>
     <string name="tab_text_3">Forgot</string>
@@ -58,11 +49,43 @@
     <string name="auth_reset">Reset</string>
     <string name="auth_register">Register</string>
 
+    <string name="auth_fill_email">Please fill your email!</string>
+    <string name="auth_invalid">Invalid account!</string>
+    <string name="auth_repass_wrond">Repassword does not match password!</string>
+    <string name="register_failed">Register Failed!</string>
+    <string name="auth_failed">Authentication Failed!</string>
+    <string name="reset_failed">Reset Password Failed!</string>
+
+    <string name="page">Page</string>
+    <string name="modified">Modified</string>
+    <string name="size">Size</string>
+    <string name="file_name">Name</string>
+    <string name="date_created">Date created:</string>
+    <string name="completed">completed!</string>
+    <string name="failed">failed. Try later!</string>
+
+    <string name="upload">upload</string>
+    <string name="download">download</string>
+
     <string name="action_close">Close</string>
     <string name="tab_sync_1">Backup</string>
     <string name="tab_sync_2">Restore</string>
     <string name="action_backup">Backup</string>
     <string name="action_restore">Restore</string>
     <string name="processing">Processing…</string>
+    <string name="no_available_folder">There is no folder available!</string>
+    <string name="no_available_image">There is no image available!</string>
+    <string name="error_no_name">Error: File name could not be empty!</string>
+    <string name="cannot_open_pdf">Can not open pdf file!</string>
+
+    <string name="share_via">Share via</string>
+    <string name="open_file">Open file</string>
+    <string name="auth_password">*****</string>
+    <string name="auth_type_password_again">*****</string>
+    <string name="auth_login_google">Login by Google account</string>
+    <string name="or">or</string>
+    <string name="folder_share">Share</string>
+    <string name="folder_rename">Rename</string>
+    <string name="folder_delete">Delete</string>
 
 </resources>

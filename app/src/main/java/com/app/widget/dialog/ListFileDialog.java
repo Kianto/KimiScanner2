@@ -21,6 +21,7 @@ import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.model.FolderInfoChecker;
+import com.app.util.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ListFileDialog extends Dialog {
     @Override
     public void show() {
         if (preCheckIfEmpty(folderList)) {
-            Toast toast = Toast.makeText(context, "There is no folder available!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, LanguageManager.getInstance().getString(R.string.no_available_folder), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return;
@@ -77,9 +78,9 @@ public class ListFileDialog extends Dialog {
 
         new AlertDialog
                 .Builder(context)
-                .setTitle(context.getString(R.string.action_select_folder))
+                .setTitle(LanguageManager.getInstance().getString(R.string.action_select_folder))
                 .setView(inflate)
-                .setPositiveButton(context.getString(R.string.action_ok), (dialog, which) -> {
+                .setPositiveButton(LanguageManager.getInstance().getString(R.string.action_ok), (dialog, which) -> {
                     List<String> folderPaths = new ArrayList<>();
                     for (FolderInfoChecker checker : folderList) {
                         if (checker.isChecked) {
@@ -87,10 +88,10 @@ public class ListFileDialog extends Dialog {
                         }
                     }
                     callback.onSucceed(folderPaths.toArray());
-                    Toast.makeText(context, R.string.processing, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, LanguageManager.getInstance().getString(R.string.processing), Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                 })
-                .setNegativeButton(context.getString(R.string.action_cancel), (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(LanguageManager.getInstance().getString(R.string.action_cancel), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }
@@ -103,10 +104,7 @@ public class ListFileDialog extends Dialog {
         for (FolderInfoChecker checker : folderList) {
             if (!checker.isExisted) countAvailable++;
         }
-        if (0 == countAvailable)
-            return true;
-
-        return false;
+        return 0 == countAvailable;
     }
 
     protected class CheckFolderAdapter extends RecyclerView.Adapter<CheckFolderAdapter.ViewHolder> {

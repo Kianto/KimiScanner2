@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.cloudview.SyncFragment;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.model.FolderInfoChecker;
+import com.app.util.LanguageManager;
 import com.app.widget.dialog.ListImageDialog;
 import com.google.android.material.tabs.TabLayout;
 
@@ -38,6 +40,7 @@ public class SyncDataFragment extends Fragment implements SyncFragment.OnListFra
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sync_data, container, false);
+        ((TextView)view.findViewById(R.id.acc_title)).setText(LanguageManager.getInstance().getString(R.string.general));
 
         EditText usernameEdt = view.findViewById(R.id.acc_email);
         usernameEdt.setText(account.getEmail());
@@ -193,13 +196,13 @@ public class SyncDataFragment extends Fragment implements SyncFragment.OnListFra
     //--- Action ---//
     protected void backup(UserAccount account, FolderInfo folder) {
         Log.i("ProSync", "Uploading " + folder.folderName);
-        Toast.makeText(getContext(), R.string.processing, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.processing), Toast.LENGTH_LONG).show();
         StorageConnector.getInstance().upload(account, folder);
     }
 
     protected void restore(UserAccount account, String folderName) {
         Log.i("ProSync", "Downloading " + folderName);
-        Toast.makeText(getContext(), R.string.processing, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.processing), Toast.LENGTH_LONG).show();
         StorageConnector.getInstance().download(account, folderName, LocalPath.ROOT_PATH);
     }
     //--- Action ---//

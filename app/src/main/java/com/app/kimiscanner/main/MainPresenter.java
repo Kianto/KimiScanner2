@@ -13,6 +13,7 @@ import com.app.kimiscanner.BaseView;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.util.LanguageManager;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
 import com.app.widget.dialog.FolderNameDialog;
@@ -80,7 +81,7 @@ public class MainPresenter extends BasePresenter {
         share.setType("application/pdf");
         share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
-        context.startActivity(Intent.createChooser(share, "Share via"));
+        context.startActivity(Intent.createChooser(share, LanguageManager.getInstance().getString(R.string.share_via)));
     }
 
     private void renameMethod(Context context) {
@@ -119,7 +120,7 @@ public class MainPresenter extends BasePresenter {
             }
         });
 
-        deleteDialog.setWarningId(R.string.dialog_delete_folder);
+        deleteDialog.setWarning(LanguageManager.getInstance().getString(R.string.dialog_delete_folder));
         deleteDialog.show();
     }
 }

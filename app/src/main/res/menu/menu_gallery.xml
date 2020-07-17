@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.app.kimiscanner.scanner.gallery.GalleryActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_sync_data"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />

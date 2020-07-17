@@ -10,6 +10,7 @@ import androidx.core.content.FileProvider;
 import com.app.kimiscanner.BasePresenter;
 import com.app.kimiscanner.BaseView;
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.FolderNameDialog;
 
@@ -64,7 +65,7 @@ public class FolderPresenter extends BasePresenter {
         share.setType("application/pdf");
         share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
-        return Intent.createChooser(share, "Share via");
+        return Intent.createChooser(share, LanguageManager.getInstance().getString(R.string.share_via));
     }
 
     private Intent openPDFMethod(String destPdfPath) {
@@ -76,7 +77,7 @@ public class FolderPresenter extends BasePresenter {
         target.setDataAndType(contentUri,"application/pdf");
         target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        return Intent.createChooser(target, "Open file");
+        return Intent.createChooser(target, LanguageManager.getInstance().getString(R.string.open_file));
     }
 
     private void renameMethod() {
@@ -113,7 +114,7 @@ public class FolderPresenter extends BasePresenter {
             }
         });
 
-        deleteDialog.setWarningId(R.string.dialog_delete_folder);
+        deleteDialog.setWarning(LanguageManager.getInstance().getString(R.string.dialog_delete_folder));
         deleteDialog.show();
     }
 
@@ -125,7 +126,7 @@ public class FolderPresenter extends BasePresenter {
         share.setType("image/*");
         share.putExtra(Intent.EXTRA_STREAM, contentUri);
 
-        return Intent.createChooser(share, "Share via");
+        return Intent.createChooser(share, LanguageManager.getInstance().getString(R.string.share_via));
     }
 
 

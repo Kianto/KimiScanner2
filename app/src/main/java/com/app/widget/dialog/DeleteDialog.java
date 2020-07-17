@@ -9,36 +9,37 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 
 public class DeleteDialog extends Dialog {
 
-    private int warnId;
+    private String warn;
 
     public DeleteDialog(Context context, Callback callback) {
         super(context, callback);
     }
 
-    public void setWarningId(int id) {
-        this.warnId = id;
+    public void setWarning(String w) {
+        this.warn = w;
     }
 
     @Override
     public void show() {
         final View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_delete, null);
         TextView textView = inflate.findViewById(R.id.delete_warning);
-        textView.setText(warnId);
+        textView.setText(warn);
 
         new AlertDialog
                 .Builder(context)
-                .setTitle(context.getString(R.string.action_remove))
+                .setTitle(LanguageManager.getInstance().getString(R.string.action_remove))
                 .setView(inflate)
-                .setPositiveButton(context.getString(R.string.action_ok), new DialogInterface.OnClickListener() {
+                .setPositiveButton(LanguageManager.getInstance().getString(R.string.action_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         callback.onSucceed("");
                     }
                 })
-                .setNegativeButton(context.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(LanguageManager.getInstance().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

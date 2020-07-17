@@ -15,6 +15,7 @@ import com.app.kimiscanner.account.authview.LoginFragment;
 import com.app.kimiscanner.account.authview.RegisterFragment;
 import com.app.kimiscanner.account.cloudview.BackupFragment;
 import com.app.kimiscanner.account.cloudview.RestoreFragment;
+import com.app.util.LanguageManager;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -45,7 +46,7 @@ public class SectionsSyncPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+        return LanguageManager.getInstance().getString(TAB_TITLES[position]);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.AccountFragment;
+import com.app.util.LanguageManager;
 
 
 public class LoginFragment extends AuthFragment {
@@ -40,7 +41,7 @@ public class LoginFragment extends AuthFragment {
                 String password = passwordEdt.getText().toString();
 
                 if (!email.contains("@") || !email.contains(".") || password.length() < 6) {
-                    Toast.makeText(getContext(), "Invalid account!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.auth_invalid), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

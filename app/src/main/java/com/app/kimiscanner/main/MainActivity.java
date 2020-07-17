@@ -1,7 +1,9 @@
 package com.app.kimiscanner.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,6 +15,8 @@ import com.app.kimiscanner.scanner.camera.CameraActivity;
 import com.app.kimiscanner.folder.FolderActivity;
 import com.app.kimiscanner.folder.FolderStore;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.util.LanguageManager;
+import com.app.util.LocaleHelper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -22,7 +26,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -31,13 +34,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends BaseView.BaseActivity
-        implements ItemFragment.OnListFragmentInteractionListener {
+        implements ItemFragment.OnListFragmentInteractionListener, LanguageManager.LanguageChangeListener {
     public final static int REQUEST_CODE_GALLERY = 42;
     public final static int REQUEST_CODE_CAMERA = 15;
     public final static int REQUEST_CODE_FOLDER = 300;
 
     final static String LONG_OPEN_FOLDER_OPTION_CODE = "open-option";
     final static String UPDATE_LIST_CODE = "update-list";
+
+    Menu mMenu;
 
     static {
         if (!OpenCVLoader.initDebug())
@@ -49,6 +54,14 @@ public class MainActivity extends BaseView.BaseActivity
     public MainActivity() {
         super();
         setPresenter(new MainPresenter(this));
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Attach language management
+        super.attachBaseContext(LocaleHelper.onAttach(base, "en"));
+        LanguageManager.setInstance(this);
+        LanguageManager.getInstance().register(this);
     }
 
     @Override
@@ -74,6 +87,8 @@ public class MainActivity extends BaseView.BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mMenu = menu;
+        updateViews(LanguageManager.getInstance().getCurrentResources());
         return true;
     }
 
@@ -95,8 +110,12 @@ public class MainActivity extends BaseView.BaseActivity
             this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
             return true;
         }
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_sync_data) {
             startActivity(new Intent(this, AccountActivity.class));
+            return true;
+        }
+        if (id == R.id.action_language) {
+            LanguageManager.getInstance().changeLanguage();
             return true;
         }
 
@@ -167,6 +186,23 @@ public class MainActivity extends BaseView.BaseActivity
     @Override
     public void onDone(String folderName, String action) {
         super.onDone(folderName, action);
+        updateListItemsView();
+    }
+
+    @Override
+    public void updateViews(Resources resources) {
+        MenuItem itemLa = mMenu.findItem(R.id.action_language);
+        MenuItem itemGa = mMenu.findItem(R.id.action_gallery);
+        MenuItem itemSy = mMenu.findItem(R.id.action_sync_data);
+
+        itemLa.setTitle(resources.getString(
+                LanguageManager.getInstance().getCurrentLanguage().equals(LanguageManager.LANG_ENGLISH_CODE)
+                        ? R.string.action_vietnamese
+                        : R.string.action_english
+                )
+        );
+        itemGa.setTitle(resources.getString(R.string.action_gallery));
+        itemSy.setTitle(resources.getString(R.string.action_sync_data));
         updateListItemsView();
     }
 

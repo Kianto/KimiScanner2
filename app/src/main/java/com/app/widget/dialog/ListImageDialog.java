@@ -25,6 +25,7 @@ import com.app.kimiscanner.account.StorageConnector;
 import com.app.kimiscanner.main.FolderCollector;
 import com.app.kimiscanner.model.FolderInfo;
 import com.app.kimiscanner.model.FolderInfoChecker;
+import com.app.util.LanguageManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -89,7 +90,7 @@ public class ListImageDialog extends Dialog {
     @Override
     public void show() {
         if ((null == folderInfo || folderInfo.filePaths.isEmpty()) && (null == cloudFolderInfo || cloudFolderInfo.imageRefs.isEmpty())) {
-            Toast toast = Toast.makeText(context, "There is no image available!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, LanguageManager.getInstance().getString(R.string.no_available_image), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return;
@@ -118,7 +119,7 @@ public class ListImageDialog extends Dialog {
                 .setTitle(folderName)
                 .setView(inflate)
                 .setPositiveButton(
-                        context.getString(isCloudFolder ? R.string.action_restore : R.string.action_backup)
+                        LanguageManager.getInstance().getString(isCloudFolder ? R.string.action_restore : R.string.action_backup)
                         , (dialog, which) -> {
                             if (isCloudFolder) {
                                 restoreAction.restoreCloud(cloudFolderInfo);
@@ -128,7 +129,7 @@ public class ListImageDialog extends Dialog {
                             dialog.dismiss();
                         }
                 )
-                .setNegativeButton(context.getString(R.string.action_close), (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(LanguageManager.getInstance().getString(R.string.action_close), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }

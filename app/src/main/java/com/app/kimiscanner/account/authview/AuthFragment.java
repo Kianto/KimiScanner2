@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.AccountFragment;
+import com.app.util.LanguageManager;
 import com.google.android.gms.common.SignInButton;
 
 public abstract class AuthFragment extends Fragment {
@@ -42,12 +43,12 @@ public abstract class AuthFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_authenticate, container, false);
 
         TextView title = root.findViewById(R.id.auth_title);
-        title.setText(getNameId());
+        title.setText(LanguageManager.getInstance().getString(getNameId()));
 
         setView(root);
 
         Button button = root.findViewById(R.id.auth_log);
-        button.setText(getNameId());
+        button.setText(LanguageManager.getInstance().getString(getNameId()));
         button.setOnClickListener(getActionListener());
 
         SignInButton googleBtn = root.findViewById(R.id.auth_google_login);

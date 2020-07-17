@@ -1,10 +1,12 @@
 package com.app.kimiscanner.folder;
 
 import android.content.ActivityNotFoundException;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import com.app.kimiscanner.BaseView;
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.ActionBar;
@@ -55,6 +57,7 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_folder, menu);
+        updateViews(menu, LanguageManager.getInstance().getCurrentResources());
 
         return true;
     }
@@ -74,7 +77,7 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
             try {
                 presenter.process(OPEN_PDF_CODE, FolderStore.getInstance().convertPDF());
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(this, "Can not open pdf file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, LanguageManager.getInstance().getString(R.string.cannot_open_pdf), Toast.LENGTH_SHORT).show();
             }
             return true;
 
@@ -126,5 +129,14 @@ public class FolderActivity extends BaseView.BaseActivity implements FolderFragm
         presenter.process(SHARE_IMAGE_CODE, FolderStore.getInstance().convertPDF());
     }
 
+    public void updateViews(Menu menu, Resources resources) {
+        MenuItem itemOp = menu.findItem(R.id.action_open_pdf);
+        MenuItem itemRe = menu.findItem(R.id.action_rename);
+        MenuItem itemDe = menu.findItem(R.id.action_delete);
+
+        itemOp.setTitle(resources.getString(R.string.action_open_pdf));
+        itemRe.setTitle(resources.getString(R.string.action_rename));
+        itemDe.setTitle(resources.getString(R.string.action_delete));
+    }
 
 }

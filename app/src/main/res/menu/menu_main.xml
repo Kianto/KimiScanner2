@@ -10,8 +10,14 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_sync_data"
         android:orderInCategory="100"
         android:title="@string/action_sync_data"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_language"
+        android:orderInCategory="100"
+        android:title="@string/action_vietnamese"
         app:showAsAction="never" />
 </menu>

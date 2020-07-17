@@ -8,6 +8,7 @@ import com.app.kimiscanner.scanner.CropFragment;
 import com.app.kimiscanner.scanner.PhotoStore;
 import com.app.kimiscanner.scanner.ProcessFragment;
 import com.app.kimiscanner.scanner.ScanFragment;
+import com.app.util.LanguageManager;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +41,7 @@ public class GalleryActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(LanguageManager.getInstance().getString(R.string.title_activity_gallery));
         }
 
         if (!permissionHelper.hasAllPermissionGranted()) {
@@ -90,9 +92,9 @@ public class GalleryActivity extends AppCompatActivity
             }
         });
         if (PhotoStore.getInstance().hasPhoto())
-            closingDialog.setWarningId(R.string.action_close_captured_camera);
+            closingDialog.setWarning(LanguageManager.getInstance().getString(R.string.action_close_review_gallery));
         else
-            closingDialog.setWarningId(R.string.action_close_camera);
+            closingDialog.setWarning(LanguageManager.getInstance().getString(R.string.action_close_gallery));
         closingDialog.show();
     }
 

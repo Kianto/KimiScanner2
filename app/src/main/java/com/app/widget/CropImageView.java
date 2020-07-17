@@ -100,7 +100,7 @@ public class CropImageView extends View {
             } else if (point4.y > bitmap2.getHeight()) {
                 point4.y = bitmap2.getHeight();
             }
-            setLayerType(1, null);
+            setLayerType(View.LAYER_TYPE_SOFTWARE/*1*/, null);
             this.left = point;
             this.right = point3;
             this.top = point2;
@@ -162,7 +162,7 @@ public class CropImageView extends View {
                     invalidate();
                     break;
                 case 2:
-                    if (this.mStatus != 3 && this.mStatus == 1) {
+                    if (this.mStatus == 1) {
                         int x = (int) (motionEvent.getX() - this.oldX);
                         int y = (int) (motionEvent.getY() - this.oldY);
                         this.oldX = motionEvent.getX();
@@ -232,7 +232,7 @@ public class CropImageView extends View {
             return 2;
         }
         if (pointToPoint3 > pointToPoint2 || pointToPoint3 > pointToPoint || pointToPoint3 > pointToPoint4) {
-            return (pointToPoint4 > pointToPoint2 || pointToPoint4 > pointToPoint3 || pointToPoint4 > pointToPoint) ? 6 : 3;
+            return 3;
         }
         return 4;
     }

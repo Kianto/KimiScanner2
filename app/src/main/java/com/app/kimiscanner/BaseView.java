@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.app.kimiscanner.account.DataTransferManager;
+import com.app.util.LanguageManager;
 
 public interface BaseView {
     void changeView(String codeState, Object output);
@@ -41,12 +42,12 @@ public interface BaseView {
 
         @Override
         public void onDone(String folderName, String action) {
-            Toast.makeText(this, folderName + " " + action + " completed!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, folderName + " " + action + " " + LanguageManager.getInstance().getString(R.string.completed), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onFail(String folderName, String action) {
-            Toast.makeText(this, folderName + " " + action + " failed. Try later!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, folderName + " " + action + " " + LanguageManager.getInstance().getString(R.string.failed), Toast.LENGTH_LONG).show();
         }
     }
 }

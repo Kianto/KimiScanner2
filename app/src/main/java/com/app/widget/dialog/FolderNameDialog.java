@@ -9,6 +9,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 
 public class FolderNameDialog extends Dialog {
 
@@ -31,21 +32,21 @@ public class FolderNameDialog extends Dialog {
 
         new AlertDialog
                 .Builder(context)
-                .setTitle(context.getString(R.string.action_rename))
+                .setTitle(LanguageManager.getInstance().getString(R.string.action_rename))
                 .setView(inflate)
-                .setPositiveButton(context.getString(R.string.action_ok), new DialogInterface.OnClickListener() {
+                .setPositiveButton(LanguageManager.getInstance().getString(R.string.action_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText editText = (EditText) inflate.findViewById(R.id.rename_text);
                         if (editText.getText().toString().trim().equals("")) {
-                            callback.onFailure("Error: File name could not be empty !");
+                            callback.onFailure(LanguageManager.getInstance().getString(R.string.error_no_name));
                             return;
                         }
                         callback.onSucceed(editText.getText().toString().trim());
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(context.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(LanguageManager.getInstance().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

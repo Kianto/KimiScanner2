@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.AccountFragment;
+import com.app.util.LanguageManager;
 
 
 public class ForgotFragment extends AuthFragment {
@@ -39,7 +40,7 @@ public class ForgotFragment extends AuthFragment {
                 String email = usernameEdt.getText().toString();
 
                 if (!email.contains("@") || !email.contains(".")) {
-                    Toast.makeText(getContext(), "Please fill your email!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), LanguageManager.getInstance().getString(R.string.auth_fill_email), Toast.LENGTH_SHORT).show();
                 }
 
                 mFatherFragment.forgotPassword(email);

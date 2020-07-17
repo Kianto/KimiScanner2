@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 
 import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
 
 public class FolderOptionDialog extends Dialog {
     public final static String DIALOG_FOLDER_SHARE = "share";
@@ -28,7 +29,7 @@ public class FolderOptionDialog extends Dialog {
                 .Builder(context)
                 .setTitle(folderName)
                 .setView(inflate)
-                .setNegativeButton(context.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(LanguageManager.getInstance().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

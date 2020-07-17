@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.main.ItemFragment;
 import com.app.kimiscanner.model.FolderInfo;
+import com.app.util.LanguageManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -78,9 +79,9 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewH
                     .into(mImage);
 
             mName.setText(folderInfo.folderName);
-            if (null != mPage) mPage.setText("Page: " + folderInfo.pageNumber);
-            if (null != mDate) mDate.setText("Modified: " + folderInfo.lastModified);
-            if (null != mSize) mSize.setText("Size: " + folderInfo.folderSize);
+            if (null != mPage) mPage.setText(LanguageManager.getInstance().getString(R.string.page) + ": " + folderInfo.pageNumber);
+            if (null != mDate) mDate.setText(LanguageManager.getInstance().getString(R.string.modified) + ": " + folderInfo.lastModified);
+            if (null != mSize) mSize.setText(LanguageManager.getInstance().getString(R.string.size) + ": " + folderInfo.folderSize);
         }
 
     }

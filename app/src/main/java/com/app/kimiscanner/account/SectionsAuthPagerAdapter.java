@@ -12,6 +12,7 @@ import com.app.kimiscanner.R;
 import com.app.kimiscanner.account.authview.ForgotFragment;
 import com.app.kimiscanner.account.authview.LoginFragment;
 import com.app.kimiscanner.account.authview.RegisterFragment;
+import com.app.util.LanguageManager;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -20,7 +21,7 @@ import com.app.kimiscanner.account.authview.RegisterFragment;
 public class SectionsAuthPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,  R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
     private final AccountFragment mFatherFragment;
 
@@ -45,7 +46,7 @@ public class SectionsAuthPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+        return LanguageManager.getInstance().getString(TAB_TITLES[position]);
     }
 
     @Override

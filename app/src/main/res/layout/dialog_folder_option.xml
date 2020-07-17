@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_share"
             android:drawableTint="@color/colorPrimary"
-            android:text="Share" />
+            android:text="@string/folder_share" />
 
         <Button
             android:id="@+id/dialog_folder_rename"
@@ -23,7 +23,7 @@
             android:layout_below="@+id/dialog_folder_share"
             android:drawableStart="@drawable/ic_edit"
             android:drawableTint="@color/colorPrimary"
-            android:text="Rename" />
+            android:text="@string/folder_rename" />
 
         <Button
             android:id="@+id/dialog_folder_delete"
@@ -32,7 +32,7 @@
             android:layout_below="@+id/dialog_folder_rename"
             android:drawableStart="@drawable/ic_delete"
             android:drawableTint="@color/colorPrimary"
-            android:text="Delete" />
+            android:text="@string/folder_delete" />
 
     </RelativeLayout>
 

@@ -1,5 +1,8 @@
 package com.app.kimiscanner.account;
 
+import com.app.kimiscanner.R;
+import com.app.util.LanguageManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +70,9 @@ public class DataTransferManager {
         }
 
         String getAction() {
-            return isUpload ? "upload" : "download";
+            return isUpload
+                    ? LanguageManager.getInstance().getString(R.string.upload)
+                    : LanguageManager.getInstance().getString(R.string.download);
         }
     }
 
