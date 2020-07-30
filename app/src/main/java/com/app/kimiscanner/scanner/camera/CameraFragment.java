@@ -7,18 +7,21 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.kimiscanner.R;
 import com.app.kimiscanner.scanner.PhotoStore;
 import com.app.kimiscanner.scanner.ScanFragment;
+import com.app.kimiscanner.scanner.DeepDetector;
 import com.app.util.Corners;
+
+import org.opencv.core.Mat;
 
 import java.util.List;
 
@@ -30,6 +33,8 @@ public class CameraFragment extends ScanFragment {
     private ViewHolder viewHolder;
     private ScanCamera scanCamera;
     private boolean isFlashOn = false;
+
+    private ProgressBar pbLoading;
 
     public CameraFragment() {
     }
@@ -90,6 +95,8 @@ public class CameraFragment extends ScanFragment {
             storeImage = view.findViewById(R.id.camera_store_image);
             storeNumber = view.findViewById(R.id.camera_store_number);
             storeLayout = view.findViewById(R.id.camera_store_layout);
+
+            pbLoading = view.findViewById(R.id.pbLoading);
 
             setListener();
         }
@@ -265,7 +272,9 @@ public class CameraFragment extends ScanFragment {
 
             // TODO: check taking photo one or many times at once
 
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            mCamera.takePicture(null, null, jpegCallback);
+
+            /*mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     try {
@@ -274,7 +283,7 @@ public class CameraFragment extends ScanFragment {
                         e.printStackTrace();
                     }
                 }
-            });
+            });*/
         }
         viewHolder.shootBtn.setEnabled(true);
     }
@@ -315,18 +324,36 @@ public class CameraFragment extends ScanFragment {
                 nowBitmap = Bitmap.createBitmap(nowBitmap, 0, 0, nowBitmap.getWidth(), nowBitmap.getHeight(), matrix, true);
             }
 
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pbLoading.setVisibility(View.VISIBLE);
+                }
+            });
+
             // Put extras
             Corners corners = mPreview.getDetectedCorners();
             if (null == corners) {
-                corners = new Corners(null, null);
+                Mat orig = new Mat();
+                org.opencv.android.Utils.bitmapToMat(nowBitmap, orig);
+                corners = new Corners(DeepDetector.getEdgePoints(orig), orig.size());
             }
+
             corners.layoutHeight = viewHolder.previewHolder.getHeight();
             corners.layoutWidth = viewHolder.previewHolder.getWidth();
 
             PhotoStore.getInstance().addBitmap(nowBitmap);
             PhotoStore.getInstance().addCorners(corners);
 
-            activityListener.onCameraFragmentInteraction();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pbLoading.setVisibility(View.GONE);
+                }
+            });
+
+            //activityListener.onCameraFragmentInteraction();
+            activityListener.onProcessFragmentInteraction(true);
         }).start();
     }
 

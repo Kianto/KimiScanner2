@@ -91,14 +91,15 @@ public class GalleryFragment extends ScanFragment {
         int width = viewLayout.getWidth();
         int height = viewLayout.getHeight();
 
-        for (Bitmap bitmap : PhotoStore.getInstance().getCapturedPhotos()) {
-
+        for (int i = 0; i < PhotoStore.getInstance().getCapturedPhotos().size(); i++) {
+            Bitmap bitmap = PhotoStore.getInstance().getBitmap(i);
             // TODO: scale
             Corners corners = ScanProcessor.getCorners(bitmap);
             corners.layoutWidth = width;
             corners.layoutHeight = height;
 
             PhotoStore.getInstance().addCorners(corners);
+            bitmap.recycle();
         }
     }
 
@@ -159,9 +160,7 @@ public class GalleryFragment extends ScanFragment {
 
     // <=== Saving photos ===>
     private void saveAllPhotos() {
-        List<Bitmap> fileList = PhotoStore.getInstance().getProcessedPhotos();
-
-        FileHelper.saveBitmapFiles(fileList);
+        FileHelper.saveAllPhotos(PhotoStore.getInstance().getProcessedPhotos());
 
         // Close store and clean work
         PhotoStore.getInstance().clear();

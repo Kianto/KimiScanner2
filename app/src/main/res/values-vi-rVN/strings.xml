@@ -75,4 +75,6 @@
     <string name="title_activity_gallery">Thư viện</string>
     <string name="title_activity_sync_data">Đồng bộ</string>
     <string name="title_backup_a_restore">Sao lưu và khôi phục</string>
+    <string name="fab_crop">Cắt</string>
+    <string name="fab_save_all">Lưu tất cả</string>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".scanner.ProcessFragment"
-    tools:showIn="@layout/activity_camera">
+    tools:showIn="@layout/activity_camera" >
 
     <RelativeLayout
         android:id="@+id/process_layout"
@@ -22,7 +22,24 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
-            android:src="@drawable/ic_done"/>
+            android:src="@drawable/ic_done_all"/>
+
+        <TextView
+            android:id="@+id/process_fab_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/button_shape"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/colorWhite"
+            android:padding="@dimen/inner_text_margin"
+            android:paddingEnd="@dimen/image_button"
+            android:paddingStart="@dimen/item_elevation"
+            android:text="@string/fab_save_all"
+            android:textSize="16sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/process_add"

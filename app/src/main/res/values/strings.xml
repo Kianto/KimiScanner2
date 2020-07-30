@@ -88,4 +88,7 @@
     <string name="folder_rename">Rename</string>
     <string name="folder_delete">Delete</string>
 
+    <string name="fab_crop">Crop</string>
+    <string name="fab_save_all">Save all</string>
+
 </resources>

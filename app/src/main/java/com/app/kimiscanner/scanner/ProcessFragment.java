@@ -9,14 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.app.kimiscanner.R;
 import com.app.util.Corners;
 import com.app.util.FileHelper;
+import com.app.util.LanguageManager;
 import com.app.util.PhotoProcessor;
 import com.app.widget.LoadingRunner;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -67,6 +70,7 @@ public class ProcessFragment extends ScanFragment {
         ImageView addBtn, doneBtn,
                 deleteBtn, rotateBtn, cropBtn,
                 blackwhiteBtn, grayscaleBtn, colorBtn;
+        //ImageView previewLayout;
         ImageViewTouch previewLayout;
         ProgressBar loadingBar;
 
@@ -81,6 +85,9 @@ public class ProcessFragment extends ScanFragment {
             colorBtn = view.findViewById(R.id.process_color);
             previewLayout = view.findViewById(R.id.process_image_view);
             loadingBar = view.findViewById(R.id.process_loading);
+
+            TextView fHint = view.findViewById(R.id.process_fab_hint);
+            fHint.setText(LanguageManager.getInstance().getString(R.string.fab_save_all));
 
             setListener();
         }
@@ -98,8 +105,33 @@ public class ProcessFragment extends ScanFragment {
         }
 
         public void showImage(Bitmap bitmap) {
+            /*Bitmap scale = resize(bitmap, 1920, 1920);
+            bitmap.recycle();*/
             previewLayout.setImageDrawable(getBitmapDrawable(bitmap), previewLayout.getDisplayMatrix(), -1.0f, -1.0f);
+           /* Glide.with(ProcessFragment.this)
+                    .load(bitmap)
+                    .into(previewLayout);*/
         }
+
+        private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+            if (maxHeight > 0 && maxWidth > 0) {
+                int width = image.getWidth();
+                int height = image.getHeight();
+                float ratioBitmap = (float) width / (float) height;
+                float ratioMax = (float) maxWidth / (float) maxHeight;
+
+                int finalWidth = maxWidth;
+                int finalHeight = maxHeight;
+                if (ratioMax > ratioBitmap) {
+                    finalWidth = (int) ((float)maxHeight * ratioBitmap);
+                } else {
+                    finalHeight = (int) ((float)maxWidth / ratioBitmap);
+                }
+                image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            }
+            return image;
+        }
+
 
         private BitmapDrawable getBitmapDrawable(Bitmap bitmap) {
             return new BitmapDrawable(getResources(), bitmap);
@@ -136,7 +168,7 @@ public class ProcessFragment extends ScanFragment {
                 break;
 
             case R.id.process_crop:
-                activityListener.onProcessFragmentInteraction();
+                activityListener.onProcessFragmentInteraction(false);
                 break;
 
             case R.id.process_delete:
@@ -159,9 +191,7 @@ public class ProcessFragment extends ScanFragment {
     }
 
     private void saveAllPhotos() {
-        List<Bitmap> fileList = PhotoStore.getInstance().getProcessedPhotos();
-
-        FileHelper.saveBitmapFiles(fileList);
+        FileHelper.saveAllPhotos(PhotoStore.getInstance().getProcessedPhotos());
 
         // Close store and clean work
         PhotoStore.getInstance().clear();

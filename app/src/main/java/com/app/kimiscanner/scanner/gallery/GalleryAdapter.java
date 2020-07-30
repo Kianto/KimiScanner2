@@ -17,10 +17,10 @@ import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private final List<Bitmap> mValues;
+    private final List<String> mValues;
     private final GalleryFragment.OnListFragmentInteractionListener mListener;
 
-    public GalleryAdapter(List<Bitmap> itemPaths, GalleryFragment.OnListFragmentInteractionListener listener) {
+    public GalleryAdapter(List<String> itemPaths, GalleryFragment.OnListFragmentInteractionListener listener) {
         mValues = itemPaths;
         mListener = listener;
     }
@@ -61,7 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             mNumber = (TextView) view.findViewById(R.id.file_page);
         }
 
-        public void setItemView(Bitmap image, int index) {
+        public void setItemView(String image, int index) {
             Glide.with(mView.getContext()).load(image)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)

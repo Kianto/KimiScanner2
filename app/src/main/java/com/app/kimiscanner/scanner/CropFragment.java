@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.app.kimiscanner.R;
 import com.app.util.Corners;
+import com.app.util.LanguageManager;
 import com.app.util.PhotoProcessor;
 import com.app.widget.CropImageView;
 
@@ -79,6 +81,9 @@ public class CropFragment extends ScanFragment {
             rotateBtn = view.findViewById(R.id.crop_rotate);
             previewLayout = view.findViewById(R.id.crop_image_layout);
             loadingBar = view.findViewById(R.id.crop_loading);
+
+            TextView fHint = view.findViewById(R.id.crop_fab_hint);
+            fHint.setText(LanguageManager.getInstance().getString(R.string.fab_crop));
 
             setListener();
         }

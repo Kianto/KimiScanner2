@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -41,6 +42,9 @@ public class MainActivity extends BaseView.BaseActivity
 
     final static String LONG_OPEN_FOLDER_OPTION_CODE = "open-option";
     final static String UPDATE_LIST_CODE = "update-list";
+
+    ProgressBar pbLoading;
+    boolean isLoading = false;
 
     Menu mMenu;
 
@@ -76,9 +80,14 @@ public class MainActivity extends BaseView.BaseActivity
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isLoading) {
+                    return;
+                }
                 startActivityForResult(new Intent(view.getContext(), CameraActivity.class), REQUEST_CODE_CAMERA);
             }
         });
+
+        pbLoading = findViewById(R.id.pbLoading);
 
         new PermissionHelper(this).requestPermission();
     }
@@ -97,6 +106,11 @@ public class MainActivity extends BaseView.BaseActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        if (isLoading) {
+            return false;
+        }
+
         int id = item.getItemId();
 
         if (id == R.id.action_gallery) {
@@ -105,7 +119,7 @@ public class MainActivity extends BaseView.BaseActivity
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
-//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
             this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
             return true;
@@ -124,6 +138,9 @@ public class MainActivity extends BaseView.BaseActivity
 
     @Override
     public void onListFragmentInteraction(FolderInfo item) {
+        if (isLoading) {
+            return;
+        }
         FolderStore.setInstance(item);
         startActivityForResult(new Intent(this, FolderActivity.class), REQUEST_CODE_FOLDER);
     }
@@ -147,10 +164,33 @@ public class MainActivity extends BaseView.BaseActivity
                     GalleryRequester.startGalleryActivity(this, uriList);
 
                 } else {
+                    isLoading = true;
+
                     // Process a single selected photo
                     Uri uri = resultData.getData();
 
-                    GalleryRequester.startGalleryActivity(this, uri);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbLoading.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                            GalleryRequester.startGalleryActivity(MainActivity.this, uri);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbLoading.setVisibility(View.GONE);
+                                }
+                            });
+
+                            isLoading = false;
+                        }
+                    }).start();
                 }
             }
             return;

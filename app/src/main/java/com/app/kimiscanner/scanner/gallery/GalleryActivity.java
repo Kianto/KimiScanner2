@@ -11,8 +11,6 @@ import com.app.kimiscanner.scanner.ScanFragment;
 import com.app.util.LanguageManager;
 import com.app.widget.dialog.DeleteDialog;
 import com.app.widget.dialog.Dialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +20,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 public class GalleryActivity extends AppCompatActivity
         implements GalleryFragment.OnListFragmentInteractionListener,
@@ -109,7 +105,7 @@ public class GalleryActivity extends AppCompatActivity
     }
 
     @Override
-    public void onProcessFragmentInteraction() {
+    public void onProcessFragmentInteraction(boolean isFromCamera) {
         mCropFragment = new CropFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);

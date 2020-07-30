@@ -69,8 +69,10 @@ public class FolderStore {
 
     public boolean deleteFolder() {
         File folderRoot = new File(folder.folderPath);
-        for (String file : Objects.requireNonNull(folderRoot.list())) {
-            new File(folderRoot.getPath(), file).delete();
+        if (null != folderRoot.list()) {
+            for (String file : Objects.requireNonNull(folderRoot.list())) {
+                new File(folderRoot.getPath(), file).delete();
+            }
         }
         return folderRoot.delete();
     }

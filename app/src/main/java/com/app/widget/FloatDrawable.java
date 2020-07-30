@@ -66,7 +66,7 @@ public class FloatDrawable extends Drawable {
         int min = Math.min(windowManager.getDefaultDisplay().getWidth(), windowManager.getDefaultDisplay().getHeight());
         
         this.RADIUS = min / 10;
-        this.sRADIUS = this.RADIUS / 4;
+        this.sRADIUS = this.RADIUS / 2;
         
         this.bitmap = bitmap;
         this.mPath.addCircle((float) this.RADIUS, (float) this.RADIUS, (float) this.RADIUS, Direction.CW);
