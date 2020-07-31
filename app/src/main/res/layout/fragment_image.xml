@@ -30,10 +30,21 @@
             android:text="1000"
             android:gravity="center"
             android:textSize="18sp"
-            android:background="@color/colorPrimaryLight"
+            android:background="@drawable/page_number_shape"
             android:textColor="@color/colorStoreNumber"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:id="@+id/file_ocr_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/inner_text_margin"
+            android:background="@drawable/ocr_text_shape"
+            android:elevation="@dimen/item_elevation"
+            android:src="@drawable/ic_text_fields"/>
 
 
 

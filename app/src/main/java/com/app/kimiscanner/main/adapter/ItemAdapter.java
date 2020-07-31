@@ -1,6 +1,8 @@
 package com.app.kimiscanner.main.adapter;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
+
 public abstract class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>  {
 
     protected final List<FolderInfo> mValues;
@@ -27,7 +30,7 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.setItemView(mValues.get(position));
+        holder.setItemView(mValues.get(position), position);
 
         holder.mView.setOnClickListener(view -> {
             if (null != mListener) {
@@ -70,8 +73,12 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewH
             mPage = (TextView) view.findViewById(R.id.item_page);
         }
 
-        public void setItemView(FolderInfo folderInfo) {
+        public void setItemView(FolderInfo folderInfo, int index) {
             this.folderInfo = folderInfo;
+
+            Animation animation = AnimationUtils.loadAnimation(mView.getContext(), R.anim.slide_from_right);
+            animation.setDuration(300 + index * 10);
+            mView.startAnimation(animation);
 
             Glide.with(mView.getContext()).load(folderInfo.getCoverImagePath())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

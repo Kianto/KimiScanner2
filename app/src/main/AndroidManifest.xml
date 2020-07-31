@@ -68,6 +68,12 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIrF2XsCzmlIyG5ot-ER6C7MjdE5JovQsqW2T5-g" />
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+        <!-- To use multiple models: android:value="ocr,model2,model3" -->
+
     </application>
 
 </manifest>

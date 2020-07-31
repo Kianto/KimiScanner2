@@ -1,14 +1,19 @@
 package com.app.kimiscanner.folder;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.kimiscanner.R;
+import com.app.widget.dialog.FolderNameDialog;
+import com.app.widget.dialog.OCRTextDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -45,12 +50,14 @@ public class FileViewAdapter extends RecyclerView.Adapter<FileViewAdapter.ViewHo
         public final View mView;
         public final ImageView mImage;
         public final TextView mNumber;
+        public final ImageButton mOCR;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mImage = (ImageView) view.findViewById(R.id.file_image);
             mNumber = (TextView) view.findViewById(R.id.file_page);
+            mOCR = (ImageButton) view.findViewById(R.id.file_ocr_text);
         }
 
         public void setItemView(String imagePath, int index) {
@@ -66,6 +73,40 @@ public class FileViewAdapter extends RecyclerView.Adapter<FileViewAdapter.ViewHo
                 public boolean onLongClick(View view) {
                     mListener.onLongListFragmentInteraction(mValues.get(index));
                     return true;
+                }
+            });
+
+            mOCR.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reviewORCText(mView.getContext(), mValues.get(index));
+                }
+            });
+
+        }
+
+        private boolean isLoading = false;
+        private void reviewORCText(Context context, String imagePath) {
+            if (isLoading) return;
+            /*else*/ isLoading = true;
+
+            OCRTextDialog renameDialog = new OCRTextDialog(context, new FolderNameDialog.Callback() {
+                @Override
+                public void onSucceed(Object... newName) {
+                    // do nothing
+                }
+
+                @Override
+                public void onFailure(String error) {
+                    // do nothing
+                }
+            });
+            OCRHelper.runTextRecognition(imagePath, new OCRHelper.OnTextRecognizedListener() {
+                @Override
+                public void onResult(String content) {
+                    renameDialog.setContent(content);
+                    renameDialog.show();
+                    isLoading = false;
                 }
             });
         }
