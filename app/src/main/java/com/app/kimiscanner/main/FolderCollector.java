@@ -4,6 +4,9 @@ import com.app.kimiscanner.model.FolderInfo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +21,7 @@ public abstract class FolderCollector {
         if (null != documents) {
             for (File file : documents) {
                 if (file.isDirectory()) {
+                    if (file.getName().contains(".")) continue;
                     if (null == file.list() || 0 == Objects.requireNonNull(file.list()).length)
                         continue;
 
@@ -26,6 +30,12 @@ public abstract class FolderCollector {
                 }
             }
         }
+        Collections.sort(resList, new Comparator<FolderInfo>() {
+            @Override
+            public int compare(FolderInfo o1, FolderInfo o2) {
+                return o2.lastModified.compareTo(o1.lastModified);
+            }
+        });
 
         return resList;
     }

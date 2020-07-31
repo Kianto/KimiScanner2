@@ -95,7 +95,7 @@ public class PhotoStore {
 
     public void updateProcessing(Bitmap newBitmap, int[] points) {
         capturedPhotos.set(processingIndex, saveImageTemporarily(newBitmap, processingIndex, true));
-        Corners corners = cornersList.get(cornersList.size() - 1);
+        Corners corners = cornersList.get(processingIndex);
         corners.setCornersByArray(points);
     }
 

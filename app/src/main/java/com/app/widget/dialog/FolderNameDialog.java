@@ -42,6 +42,10 @@ public class FolderNameDialog extends Dialog {
                             callback.onFailure(LanguageManager.getInstance().getString(R.string.error_no_name));
                             return;
                         }
+                        if (editText.getText().toString().contains(".")) {
+                            callback.onFailure(LanguageManager.getInstance().getString(R.string.error_invalid_name));
+                            return;
+                        }
                         callback.onSucceed(editText.getText().toString().trim());
                         dialog.dismiss();
                     }

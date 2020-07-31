@@ -15,6 +15,7 @@ public class Corners {
     public Corners(List<Point> corners, Size size) {
         this.cornerPoints = corners;
         this.size = size;
+        this.validate();
     }
 
     public int[] cornersToArray() {
@@ -49,4 +50,23 @@ public class Corners {
         }
     }
 
+    public void validate() {
+        if (null == cornerPoints) return;
+
+        // if 4 but there is 2 points alike
+        for (int i = 0; i < cornerPoints.size(); i ++) {
+            for (int j = 0; j < cornerPoints.size(); j ++) {
+                if (i == j) continue;
+
+                Point p1 = cornerPoints.get(i);
+                Point p2 = cornerPoints.get(j);
+                if (p1.x == p2.x && p1.y == p2.y) {
+                    cornerPoints = null;
+                    size = null;
+                    return;
+                }
+            }
+        }
+
+    }
 }

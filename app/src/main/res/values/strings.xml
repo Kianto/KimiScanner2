@@ -90,5 +90,6 @@
 
     <string name="fab_crop">Crop</string>
     <string name="fab_save_all">Save all</string>
+    <string name="error_invalid_name">Error: File name is invalid</string>
 
 </resources>

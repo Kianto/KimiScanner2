@@ -77,4 +77,5 @@
     <string name="title_backup_a_restore">Sao lưu và khôi phục</string>
     <string name="fab_crop">Cắt</string>
     <string name="fab_save_all">Lưu tất cả</string>
+    <string name="error_invalid_name">Lỗi: Tên không hợp lệ</string>
 </resources>

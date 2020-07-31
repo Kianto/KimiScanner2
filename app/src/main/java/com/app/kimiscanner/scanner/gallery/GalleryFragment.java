@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +20,9 @@ import com.app.kimiscanner.scanner.ScanFragment;
 import com.app.kimiscanner.scanner.ScanProcessor;
 import com.app.util.Corners;
 import com.app.util.FileHelper;
+import com.app.util.PhotoProcessor;
 import com.app.widget.LoadingRunner;
 
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -60,8 +62,8 @@ public class GalleryFragment extends ScanFragment {
         });
 
 
-        displaySelectedBitmaps(mRecyclerView);
         detectEdgeThenCropImages(mRecyclerView);
+        displaySelectedBitmaps(mRecyclerView);
 
         // if there is only one image then process it
         if (0 == PhotoStore.getInstance().size()) {
@@ -88,17 +90,35 @@ public class GalleryFragment extends ScanFragment {
     }
 
     private void detectEdgeThenCropImages(RecyclerView viewLayout) {
-        int width = viewLayout.getWidth();
-        int height = viewLayout.getHeight();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int delta = 32*2 + 56 + 56;
+        int height = displayMetrics.heightPixels - delta;
+        int width = displayMetrics.widthPixels;
 
         for (int i = 0; i < PhotoStore.getInstance().getCapturedPhotos().size(); i++) {
             Bitmap bitmap = PhotoStore.getInstance().getBitmap(i);
-            // TODO: scale
+
             Corners corners = ScanProcessor.getCorners(bitmap);
-            corners.layoutWidth = width;
-            corners.layoutHeight = height;
+            double scale = (1.0 * bitmap.getWidth()) / bitmap.getHeight();
+            /*
+             *         bitmap.getWidth()    viewLayout.getWidth()
+             * scale = ------------------ ? ----------------------
+             *         bitmap.getHeight()   viewLayout.getHeight()
+             * */
+            if (scale * height <= width) {
+                corners.layoutWidth = (float) (scale * height);
+                corners.layoutHeight = height;
+                corners.scalePoints(1.0 * height / bitmap.getHeight());
+            } else {
+                corners.layoutWidth = width;
+                corners.layoutHeight = (float) (width / scale);
+                corners.scalePoints(1.0 * width / bitmap.getWidth());
+            }
 
             PhotoStore.getInstance().addCorners(corners);
+            PhotoStore.getInstance().saveProcessing(new PhotoProcessor(bitmap, corners).getOriginal());
+
             bitmap.recycle();
         }
     }
@@ -107,7 +127,7 @@ public class GalleryFragment extends ScanFragment {
         Context context = getContext();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, GRID_COLUMN);
         GalleryAdapter adapter = new GalleryAdapter(
-                PhotoStore.getInstance().getCapturedPhotos(),
+                PhotoStore.getInstance().getProcessedPhotos(),
                 this::preHandle
         );
 
@@ -121,7 +141,7 @@ public class GalleryFragment extends ScanFragment {
         Corners corners = PhotoStore.getInstance().getProcessingCorners();
         if (0 == corners.layoutHeight || 0 == corners.layoutWidth) {
 
-            Bitmap bitmap = PhotoStore.getInstance().getProcessingBitmap();
+            Bitmap bitmap = PhotoStore.getInstance().getBitmap(index);
             double scale = (1.0 * bitmap.getWidth()) / bitmap.getHeight();
 
             /*
@@ -153,7 +173,7 @@ public class GalleryFragment extends ScanFragment {
         }
 
         mRecyclerView.setAdapter(new GalleryAdapter(
-                PhotoStore.getInstance().getCapturedPhotos(),
+                PhotoStore.getInstance().getProcessedPhotos(),
                 mListener
         ));
     }
@@ -173,11 +193,6 @@ public class GalleryFragment extends ScanFragment {
         @Override
         protected void doInBackground() {
             saveAllPhotos();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
     } // end class SaveLoadingTask

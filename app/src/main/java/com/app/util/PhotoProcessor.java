@@ -15,12 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PhotoProcessor {
-    private Bitmap srcImage;
+//    private Bitmap srcImage;
     private Bitmap croppedImage;
     private Corners corners;
 
     public PhotoProcessor(Bitmap source, Corners corners) {
-        this.srcImage = source;
+//        this.srcImage = source;
         this.corners = corners;
 
         this.croppedImage = cropBitmap(source, corners.cornersToArray());

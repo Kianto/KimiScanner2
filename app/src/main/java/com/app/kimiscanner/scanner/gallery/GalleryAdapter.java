@@ -1,6 +1,6 @@
 package com.app.kimiscanner.scanner.gallery;
 
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +59,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             mView = view;
             mImage = (ImageView) view.findViewById(R.id.file_image);
             mNumber = (TextView) view.findViewById(R.id.file_page);
+            view.findViewById(R.id.file_ocr_text).setVisibility(View.GONE);
         }
 
         public void setItemView(String image, int index) {
+//            mImage.setImageBitmap(BitmapFactory.decodeFile(image));
+//            mImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(mView.getContext()).load(image)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .into(mImage);
             mNumber.setText(String.valueOf(index));

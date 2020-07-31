@@ -30,9 +30,12 @@ import android.widget.ProgressBar;
 
 import org.opencv.android.OpenCVLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.app.kimiscanner.LocalPath.ROOT_TEMP_PATH;
 
 public class MainActivity extends BaseView.BaseActivity
         implements ItemFragment.OnListFragmentInteractionListener, LanguageManager.LanguageChangeListener {
@@ -83,6 +86,8 @@ public class MainActivity extends BaseView.BaseActivity
                 if (isLoading) {
                     return;
                 }
+                // todo: should clear this
+                deleteTmpFolder();
                 startActivityForResult(new Intent(view.getContext(), CameraActivity.class), REQUEST_CODE_CAMERA);
             }
         });
@@ -114,8 +119,9 @@ public class MainActivity extends BaseView.BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.action_gallery) {
-            // TODO: check case out of memory if select too many images
-            // allow select one image only
+            // todo: should clear this
+            deleteTmpFolder();
+
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
@@ -244,6 +250,16 @@ public class MainActivity extends BaseView.BaseActivity
         itemGa.setTitle(resources.getString(R.string.action_gallery));
         itemSy.setTitle(resources.getString(R.string.action_sync_data));
         updateListItemsView();
+    }
+
+    private void deleteTmpFolder() {
+        File folderRoot = new File(ROOT_TEMP_PATH);
+        if (null != folderRoot.listFiles()) {
+            for (File file : folderRoot.listFiles()) {
+                file.delete();
+            }
+        }
+        folderRoot.delete();
     }
 
 }
