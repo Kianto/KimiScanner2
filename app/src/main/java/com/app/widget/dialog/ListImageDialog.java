@@ -188,6 +188,7 @@ public class ListImageDialog extends Dialog {
                 mView = view;
                 mImage = (ImageView) view.findViewById(R.id.file_image);
                 mPage = (TextView) view.findViewById(R.id.file_page);
+                view.findViewById(R.id.file_ocr_text).setVisibility(View.GONE);
             }
 
             public void setItemView(int index, String uriPath) {

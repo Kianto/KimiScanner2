@@ -16,6 +16,7 @@ public class FolderInfo {
     public String folderPath;
     public String folderName;
     public String lastModified;
+    public long longLastModified;
     public String folderSize;
     public int pageNumber;
 
@@ -29,6 +30,7 @@ public class FolderInfo {
 
         this.folderPath = folder.getPath();
         this.folderName = folder.getName();
+        this.longLastModified = folder.lastModified();
         this.lastModified = formatTime(folder.lastModified());
         this.filePaths = getFilePaths(folder);
         this.pageNumber = filePaths.size();

@@ -23,6 +23,10 @@ public class DataTransferManager {
         listenerList.add(listener);
     }
 
+    public void unRegisterListen(DataListener listener) {
+        listenerList.remove(listener);
+    }
+
     public void addProgress(String id, String folderName, int fileNumber, boolean isUpload) {
         dataMap.put(id, new DataTransfer(folderName, fileNumber, isUpload));
     }

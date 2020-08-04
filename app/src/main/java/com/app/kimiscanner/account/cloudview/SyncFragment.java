@@ -62,6 +62,7 @@ public abstract class SyncFragment extends Fragment implements DataTransferManag
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        DataTransferManager.getInstance().unRegisterListen(this);
     }
 
     @Override

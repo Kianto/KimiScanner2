@@ -33,7 +33,7 @@ public abstract class FolderCollector {
         Collections.sort(resList, new Comparator<FolderInfo>() {
             @Override
             public int compare(FolderInfo o1, FolderInfo o2) {
-                return o2.lastModified.compareTo(o1.lastModified);
+                return (int)(o2.longLastModified - o1.longLastModified);
             }
         });
 

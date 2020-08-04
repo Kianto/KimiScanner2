@@ -41,6 +41,12 @@ public interface BaseView {
         }
 
         @Override
+        public void onDestroy() {
+            super.onDestroy();
+            DataTransferManager.getInstance().unRegisterListen(this);
+        }
+
+        @Override
         public void onDone(String folderName, String action) {
             Toast.makeText(this, folderName + " " + action + " " + LanguageManager.getInstance().getString(R.string.completed), Toast.LENGTH_LONG).show();
         }

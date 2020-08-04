@@ -33,8 +33,9 @@ public class BackupFragment extends SyncFragment {
             public void onSuccess(List<CloudFolderInfo> folders) {
                 // Get local folders
                 LoadingRunner runner = new ListLocalLoadingTask(progressBar, list -> {
-                    if (null != list)
+                    if (null != list) {
                         listLayout.setAdapter(new BackupFolderAdapter((List<FolderInfo>) list, folders, mListener));
+                    }
                 });
                 runner.execute();
             }
